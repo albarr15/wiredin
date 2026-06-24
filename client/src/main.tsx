@@ -9,6 +9,7 @@ import Profile from "./pages/Profile/Profile.tsx";
 import SubmitPlace from "./pages/SubmitPlace/SubmitPlace.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Signup from "./pages/Signup/Signup.tsx";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,7 +20,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="places/submit" element={<SubmitPlace />} />
         <Route path="profile" element={<Profile />} />
         <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
+        <Route path="sign-up" element={<Signup />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
