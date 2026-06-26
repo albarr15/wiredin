@@ -10,6 +10,7 @@ import SubmitPlace from "./pages/SubmitPlace/SubmitPlace.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Signup from "./pages/Signup/Signup.tsx";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.tsx";
+import UpdatePassword from "./pages/UpdatePassword/UpdatePassword.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="login" element={<Login />} />
         <Route path="sign-up" element={<Signup />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="update-password" element={<UpdatePassword />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
