@@ -51,7 +51,7 @@ export function SignUpForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       {success ? (
-        <Card>
+        <Card className="py-12">
           <CardHeader>
             <CardTitle className="text-2xl">
               Thank you for signing up!
@@ -66,7 +66,7 @@ export function SignUpForm({
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="py-12">
           <CardHeader>
             <CardTitle className="text-2xl">Sign up</CardTitle>
             <CardDescription>Create a new account</CardDescription>

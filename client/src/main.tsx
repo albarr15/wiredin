@@ -11,19 +11,22 @@ import Login from "./pages/Login/Login.tsx";
 import Signup from "./pages/Signup/Signup.tsx";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.tsx";
 import UpdatePassword from "./pages/UpdatePassword/UpdatePassword.tsx";
+import AuthLayout from "./components/layouts/AuthLayout.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<Login />} />
+          <Route path="sign-up" element={<Signup />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="update-password" element={<UpdatePassword />} />
+        </Route>
         <Route path="/" element={<Home />} />
         <Route path="places/:placeId" element={<Place />} />
         <Route path="places/submit" element={<SubmitPlace />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="login" element={<Login />} />
-        <Route path="sign-up" element={<Signup />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="update-password" element={<UpdatePassword />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
