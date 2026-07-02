@@ -12,6 +12,7 @@ import Signup from "./pages/Signup/Signup.tsx";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.tsx";
 import UpdatePassword from "./pages/UpdatePassword/UpdatePassword.tsx";
 import AuthLayout from "./components/layouts/AuthLayout.tsx";
+import MainLayout from "./components/layouts/MainLayout.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -23,10 +24,12 @@ createRoot(document.getElementById("root")!).render(
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="update-password" element={<UpdatePassword />} />
         </Route>
-        <Route path="/" element={<Home />} />
-        <Route path="places/:placeId" element={<Place />} />
-        <Route path="places/submit" element={<SubmitPlace />} />
-        <Route path="profile" element={<Profile />} />
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="places/:placeId" element={<Place />} />
+          <Route path="places/submit" element={<SubmitPlace />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
