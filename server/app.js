@@ -1,7 +1,9 @@
-const express = require("express");
+import authenticateUser from "./authMiddleware.js"; // note the extension
+import express from "express";
+import cors from "cors";
+
 const app = express();
 const port = 3000;
-const cors = require("cors");
 
 const corsOptions = {
   origin: "http://localhost:5173", // Only allow this domain
@@ -18,8 +20,11 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.get("/api/profile", authenticateUser, (req, res) => {
+  res.json({
+    message: "Welcome to your profile!",
+    userId: req.user.id,
+  });
 });
 
 app.post("/", (req, res) => {
@@ -32,4 +37,8 @@ app.put("/user", (req, res) => {
 
 app.delete("/user", (req, res) => {
   res.send("Got a DELETE request at /user");
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });

@@ -24,15 +24,28 @@ import { useAuth } from "@/context/AuthContext";
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const user = useAuth();
+  const { session, user } = useAuth();
 
-  const checkAuth = () => {
+  const checkAuth = async () => {
     if (!user) {
       setOpen(true);
       return;
     }
+
     // TODO: edit this to the target protected route
-    location.href = "/profile";
+
+    console.log("fetching backend user data ...");
+    fetch("/api/profile", {
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        location.href = "/profile";
+      })
+      .catch((error) => console.error("Error fetching data: ", error));
   };
 
   return (
