@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase/client";
 import {
   Card,
   CardAction,
@@ -20,21 +19,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Link } from "react-router";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const checkAuth = async () => {
-    console.log("checking auth ...");
-    const { error } = await supabase.auth.getUser();
+  const user = useAuth();
 
-    if (error) {
+  const checkAuth = () => {
+    if (!user) {
       setOpen(true);
-      console.log("no acc found ...");
-    } else {
-      // TODO: edit this to the target protected route
-      location.href = "/profile";
+      return;
     }
+    // TODO: edit this to the target protected route
+    location.href = "/profile";
   };
 
   return (

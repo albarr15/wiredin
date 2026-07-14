@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
-// import App from "./App.tsx";
 import Home from "./pages/Home/Home.tsx";
 import Place from "./pages/Place/Place.tsx";
 import Profile from "./pages/Profile/Profile.tsx";
@@ -13,24 +12,27 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.tsx";
 import UpdatePassword from "./pages/UpdatePassword/UpdatePassword.tsx";
 import AuthLayout from "./components/layouts/AuthLayout.tsx";
 import MainLayout from "./components/layouts/MainLayout.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="sign-up" element={<Signup />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="update-password" element={<UpdatePassword />} />
-        </Route>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="places/:placeId" element={<Place />} />
-          <Route path="places/submit" element={<SubmitPlace />} />
-          <Route path="profile" element={<Profile />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="sign-up" element={<Signup />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="update-password" element={<UpdatePassword />} />
+          </Route>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="places/:placeId" element={<Place />} />
+            <Route path="places/submit" element={<SubmitPlace />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );
