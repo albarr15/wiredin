@@ -1,31 +1,37 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { type User } from "@supabase/supabase-js";
+import { type Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
 
-const AuthContext = createContext<User | null>(null);
+type AuthContextValue = {
+  session: Session | null;
+  isLoading: boolean;
+};
+
+const AuthContext = createContext<AuthContextValue>({
+  session: null,
+  isLoading: true,
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setIsLoading(false);
+    });
+
+    // handles auth events after initial load
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log(event, session);
+      setSession(session);
 
-      if (event === "INITIAL_SESSION") {
-        // handle initial session
-        setUser(session?.user ?? null);
-      } else if (event === "SIGNED_IN") {
+      if (event === "SIGNED_IN") {
         // handle sign in event
-        setUser(session?.user ?? null);
       } else if (event === "SIGNED_OUT") {
-        // handle sign out event
-
         console.log("SIGNED_OUT", session);
-        // clear local and session storage
-
-        setUser(null);
       } else if (event === "PASSWORD_RECOVERY") {
         // handle password recovery event
       } else if (event === "TOKEN_REFRESHED") {
@@ -36,12 +42,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
-      // call unsubscribe to remove the callback
       subscription.unsubscribe();
     };
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ session, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const { session, isLoading } = useContext(AuthContext);
+  return {
+    session,
+    user: session?.user ?? null,
+    isAuthenticated: !!session?.user,
+    isLoading,
+  };
+};

@@ -13,6 +13,7 @@ import UpdatePassword from "./pages/UpdatePassword/UpdatePassword.tsx";
 import AuthLayout from "./components/layouts/AuthLayout.tsx";
 import MainLayout from "./components/layouts/MainLayout.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { ProtectedRoute } from "./components/layouts/ProtectedRoute.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -28,8 +29,10 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="places/:placeId" element={<Place />} />
-            <Route path="places/submit" element={<SubmitPlace />} />
-            <Route path="profile" element={<Profile />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="places/submit" element={<SubmitPlace />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
