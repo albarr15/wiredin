@@ -184,3 +184,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100dvw;
+  margin: 0 auto;
+}
