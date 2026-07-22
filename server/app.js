@@ -3,9 +3,9 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import "dotenv/config";
-import placesRouter from "./routes/places.js";
+import placesRouter from "./routes/placeRoutes.js";
 
-import { pool } from "./db.js";
+import { pool } from "./config/db.js";
 
 pool.connect().then(() => console.log("DB connected!"));
 
