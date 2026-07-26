@@ -76,6 +76,11 @@ export const updatePlace = async (req, res) => {
 
   try {
     const place = await Place.update(id, updates);
+
+    if (!place) {
+      return res.status(404).json({ error: "Place not found." });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Successfully updated place.",
@@ -93,6 +98,11 @@ export const deletePlace = async (req, res) => {
 
   try {
     const place = await Place.delete(id);
+
+    if (!place) {
+      return res.status(404).json({ error: "Place not found." });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Successfully deleted place.",
