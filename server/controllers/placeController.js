@@ -19,11 +19,6 @@ export const createPlace = async (req, res) => {
 
   console.log("Body:", req.body);
 
-  // Removed null-check for address_id while endpoints not completed yet
-  if (!id || !name || !created_by || !category) {
-    return res.status(400).json({ error: "Missing required field/s." });
-  }
-
   try {
     const place = await Place.create(
       id,
@@ -54,8 +49,8 @@ export const createPlace = async (req, res) => {
 };
 
 export const getAllPlaces = async (req, res) => {
-  const page = Math.max(Number(req.query.page) || 1, 1);
-  const limit = Math.max(Number(req.query.limit) || 10, 1);
+  const page = req.query.page;
+  const limit = req.query.limit;
   const offset = (page - 1) * limit;
 
   try {
@@ -79,12 +74,8 @@ export const updatePlace = async (req, res) => {
 
   console.log("Body: ", req.body);
 
-  if (!id) {
-    return res.status(400).json({ error: "Missing required field/s." });
-  }
-
   try {
-    const place = Place.update(id, updates);
+    const place = await Place.update(id, updates);
     return res.status(200).json({
       success: true,
       message: "Successfully updated place.",
@@ -97,11 +88,11 @@ export const updatePlace = async (req, res) => {
   }
 };
 
-export const deletePlace = (req, res) => {
+export const deletePlace = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const place = Place.delete(id);
+    const place = await Place.delete(id);
     return res.status(200).json({
       success: true,
       message: "Successfully deleted place.",

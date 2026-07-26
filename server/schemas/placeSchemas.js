@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { PaginationSchema } from "./paginationSchema.js";
 
-export const PlaceSchema = z.object({
+const PlaceSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   address_id: z.uuid(),
@@ -27,4 +28,23 @@ export const PlaceSchema = z.object({
   instagram_url: z.url().optional(),
   tiktok_url: z.url().optional(),
   website_url: z.url().optional(),
+});
+
+const IdParamSchema = z.object({ id: z.uuid() });
+
+export const CreatePlaceSchema = z.object({
+  body: PlaceSchema,
+});
+
+export const UpdatePlaceSchema = z.object({
+  body: PlaceSchema.partial(),
+  params: IdParamSchema,
+});
+
+export const DeletePlaceSchema = z.object({
+  params: IdParamSchema,
+});
+
+export const GetAllPlacesSchema = z.object({
+  query: PaginationSchema,
 });

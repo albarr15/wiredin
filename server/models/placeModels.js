@@ -68,14 +68,14 @@ export const Place = {
       ],
     );
 
-    return result.rows;
+    return result.rows[0];
   },
 
   update: async (id, updates) => {
     const keys = Object.keys(updates);
 
     if (keys.length === 0) {
-      return res.status(400).json({ error: "No fields provided for update" });
+      throw new Error("No fields provided for update");
     }
 
     const setClause = keys
@@ -93,7 +93,7 @@ export const Place = {
       [...values, id],
     );
 
-    return result.rows;
+    return result.rows[0];
   },
 
   delete: async (id) => {
@@ -106,6 +106,6 @@ export const Place = {
       [id],
     );
 
-    return result.rows;
+    return result.rows[0];
   },
 };
