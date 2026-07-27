@@ -100,14 +100,63 @@ export const getAllPlaces = async (req, res) => {
 export const updatePlace = async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+  const file = req.file;
 
-  console.log("Body: ", req.body);
+  let uploadData;
+  let initialImage;
 
   try {
+    if (file) {
+      const existingPlace = await Place.get(id);
+
+      if (!existingPlace) {
+        return res.status(404).json({
+          error: "Place not found.",
+        });
+      }
+
+      const placeName = updates.name ?? existingPlace.name;
+      const safeName = placeName.trim().replace(/[^a-zA-Z0-9-_ ]/g, "");
+      const filePath = `public/${safeName}/${Date.now()}-${file.originalname}`;
+
+      initialImage = existingPlace.image_url;
+
+      const { data, error } = await supabase.storage
+        .from("place-images")
+        .upload(filePath, file.buffer, {
+          contentType: file.mimetype,
+        });
+
+      if (error) throw error;
+
+      uploadData = data;
+
+      const { data: publicUrlData } = supabase.storage
+        .from("place-images")
+        .getPublicUrl(uploadData.path);
+
+      updates.image_url = publicUrlData.publicUrl;
+    }
+
     const place = await Place.update(id, updates);
 
     if (!place) {
-      return res.status(404).json({ error: "Place not found." });
+      return res.status(404).json({
+        error: "Place not found.",
+      });
+    }
+
+    if (initialImage) {
+      const prefix = "/storage/v1/object/public/place-images/";
+      const path = decodeURIComponent(initialImage.split(prefix)[1]);
+
+      const { error: removeError } = await supabase.storage
+        .from("place-images")
+        .remove([path]);
+
+      if (removeError) {
+        console.error("Failed to delete old image:", removeError);
+      }
     }
 
     return res.status(200).json({
@@ -116,6 +165,10 @@ export const updatePlace = async (req, res) => {
       data: place,
     });
   } catch (err) {
+    if (uploadData) {
+      await supabase.storage.from("place-images").remove([uploadData.path]);
+    }
+
     return res.status(500).json({
       error: err.message,
     });

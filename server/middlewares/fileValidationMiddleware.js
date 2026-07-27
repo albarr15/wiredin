@@ -7,9 +7,7 @@ export const fileValidation = async (req, res, next) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({
-        error: "Please upload a valid image.",
-      });
+      return next();
     }
 
     const type = await fileTypeFromBuffer(file.buffer);

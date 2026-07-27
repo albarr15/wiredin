@@ -13,6 +13,20 @@ export const Place = {
     return result.rows;
   },
 
+  get: async (id) => {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM places
+      WHERE id = $1
+      LIMIT 1;
+    `,
+      [id],
+    );
+
+    return result.rows[0];
+  },
+
   create: async (
     id,
     name,
