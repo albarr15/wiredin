@@ -1,4 +1,5 @@
 import { Place } from "../models/placeModels.js";
+import { supabase } from "../supabaseClient.js";
 
 export const createPlace = async (req, res) => {
   const {
@@ -8,7 +9,6 @@ export const createPlace = async (req, res) => {
     created_by,
     category,
     pricing_tier,
-    image_url,
     phone,
     email_address,
     facebook_url,
@@ -17,9 +17,34 @@ export const createPlace = async (req, res) => {
     website_url,
   } = req.body;
 
+  const file = req.file;
+  const safeName = name.trim().replace(/[^a-zA-Z0-9-_ ]/g, "");
+  const filePath = `public/${safeName}/${Date.now()}-${file.originalname}`;
+
   console.log("Body:", req.body);
+  console.log("Image:", req.file);
+
+  let uploadData;
 
   try {
+    const { data, error } = await supabase.storage
+      .from("place-images")
+      .upload(filePath, file.buffer, {
+        contentType: file.mimetype,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    uploadData = data;
+
+    const { data: publicUrlData } = supabase.storage
+      .from("place-images")
+      .getPublicUrl(data.path);
+
+    const image_url = publicUrlData.publicUrl;
+
     const place = await Place.create(
       id,
       name,
@@ -42,6 +67,10 @@ export const createPlace = async (req, res) => {
       insertedData: place,
     });
   } catch (err) {
+    if (uploadData) {
+      await supabase.storage.from("place-images").remove([uploadData.path]);
+    }
+
     return res.status(500).json({
       error: err.message,
     });

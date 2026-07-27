@@ -9,7 +9,8 @@ import { pool } from "./config/db.js";
 
 pool.connect().then(() => console.log("DB connected!"));
 
-const upload = multer();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 const app = express();
 const port = 3000;
 
