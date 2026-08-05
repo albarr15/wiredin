@@ -2,64 +2,43 @@ import { Place } from "../models/placeModels.js";
 import { supabase } from "../supabaseClient.js";
 
 export const createPlace = async (req, res) => {
-  const {
-    id,
-    name,
-    address_id,
-    created_by,
-    category,
-    pricing_tier,
-    phone,
-    email_address,
-    facebook_url,
-    instagram_url,
-    tiktok_url,
-    website_url,
-  } = req.body;
+  const properties = req.body;
 
   const file = req.file;
-  const safeName = name.trim().replace(/[^a-zA-Z0-9-_ ]/g, "");
-  const filePath = `public/${safeName}/${Date.now()}-${file.originalname}`;
-
   console.log("Body:", req.body);
   console.log("Image:", req.file);
 
   let uploadData;
+  let image_url;
 
   try {
-    const { data, error } = await supabase.storage
-      .from("place-images")
-      .upload(filePath, file.buffer, {
-        contentType: file.mimetype,
-      });
+    if (file) {
+      const safeName = properties.name.trim().replace(/[^a-zA-Z0-9-_ ]/g, "");
+      const filePath = `public/${safeName}/${Date.now()}-${file.originalname}`;
 
-    if (error) {
-      throw error;
+      const { data, error } = await supabase.storage
+        .from("place-images")
+        .upload(filePath, file.buffer, {
+          contentType: file.mimetype,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      uploadData = data;
+
+      const { data: publicUrlData } = supabase.storage
+        .from("place-images")
+        .getPublicUrl(data.path);
+
+      image_url = publicUrlData.publicUrl;
+      properties.image_url = image_url;
     }
 
-    uploadData = data;
+    console.log("Properties: ", properties);
 
-    const { data: publicUrlData } = supabase.storage
-      .from("place-images")
-      .getPublicUrl(data.path);
-
-    const image_url = publicUrlData.publicUrl;
-
-    const place = await Place.create(
-      id,
-      name,
-      address_id,
-      created_by,
-      category,
-      pricing_tier,
-      image_url,
-      phone,
-      email_address,
-      facebook_url,
-      instagram_url,
-      tiktok_url,
-      website_url,
-    );
+    const place = await Place.create(properties);
 
     return res.status(201).json({
       success: true,
