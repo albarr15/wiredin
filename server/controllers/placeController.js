@@ -179,16 +179,32 @@ export const deletePlace = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const place = await Place.delete(id);
+    const place = await Place.get(id);
 
     if (!place) {
       return res.status(404).json({ error: "Place not found." });
     }
 
+    const imagePath = place.image_url;
+
+    const deletedPlace = await Place.delete(id);
+
+    if (imagePath) {
+      const prefix = "/storage/v1/object/public/place-images/";
+      const path = decodeURIComponent(imagePath.split(prefix)[1]);
+
+      const { error: removeError } = await supabase.storage
+        .from("place-images")
+        .remove([path]);
+
+      if (removeError) {
+        console.error("Failed to delete image from storage:", removeError);
+      }
+    }
     return res.status(200).json({
       success: true,
       message: "Successfully deleted place.",
-      data: place,
+      data: deletedPlace,
     });
   } catch (err) {
     return res.status(500).json({
