@@ -13,59 +13,40 @@ export const Place = {
     return result.rows;
   },
 
-  create: async (
-    id,
-    name,
-    address_id,
-    created_by,
-    category,
-    pricing_tier,
-    image_url,
-    phone,
-    email_address,
-    facebook_url,
-    instagram_url,
-    tiktok_url,
-    website_url,
-  ) => {
+  get: async (id) => {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM places
+      WHERE id = $1
+      LIMIT 1;
+    `,
+      [id],
+    );
+
+    return result.rows[0];
+  },
+
+  create: async (properties) => {
+    const keys = Object.keys(properties);
+
+    if (keys.length === 0) {
+      throw new Error("No fields provided for create");
+    }
+
+    const insertClause = keys.join(", ");
+    const placeholders = keys.map((_, index) => `$${index + 1}`).join(",");
+
+    const values = keys.map((key) => properties[key]);
+
     const result = await pool.query(
       `
         INSERT INTO places (
-            id,
-            name,
-            address_id,
-            created_by,
-            category,
-            pricing_tier,
-            image_url,
-            phone,
-            email_address,
-            facebook_url,
-            instagram_url,
-            tiktok_url,
-            website_url
-        )
+        ${insertClause})
         VALUES (
-            $1, $2, $3, $4, $5, $6, $7,
-            $8, $9, $10, $11, $12, $13
-        )
-        RETURNING *;
-    `,
-      [
-        id,
-        name,
-        address_id,
-        created_by,
-        category,
-        pricing_tier,
-        image_url,
-        phone,
-        email_address,
-        facebook_url,
-        instagram_url,
-        tiktok_url,
-        website_url,
-      ],
+        ${placeholders})
+        RETURNING *;`,
+      values,
     );
 
     return result.rows[0];

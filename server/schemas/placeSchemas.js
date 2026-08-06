@@ -16,7 +16,10 @@ const PlaceSchema = z.object({
         "The pricing_tier must follow the format: [lowest_price]-[highest_price]",
     })
     .optional(),
-  image_url: z.url().optional(),
+  image_url: z.preprocess(
+    (value) => (value === "" ? undefined : value),
+    z.url().optional(),
+  ),
   phone: z
     .string()
     .regex(/^\+639\d{9}$/, {

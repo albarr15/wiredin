@@ -8,9 +8,15 @@ import {
   CreatePlaceSchema,
   DeletePlaceSchema,
 } from "../schemas/placeSchemas.js";
+import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
+import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
 
 import multer from "multer";
-const upload = multer();
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: MAX_FILE_IMAGE_SIZE },
+});
 
 const router = express.Router();
 
@@ -18,14 +24,16 @@ router.get("/", validate(GetAllPlacesSchema), placeController.getAllPlaces);
 
 router.patch(
   "/:id",
-  upload.none(),
+  upload.single("image_url"),
+  fileValidation,
   validate(UpdatePlaceSchema),
   placeController.updatePlace,
 );
 
 router.post(
   "/",
-  upload.none(),
+  upload.single("image_url"),
+  fileValidation,
   validate(CreatePlaceSchema),
   placeController.createPlace,
 );
