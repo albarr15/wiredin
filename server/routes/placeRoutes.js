@@ -9,7 +9,7 @@ import {
   DeletePlaceSchema,
 } from "../schemas/placeSchemas.js";
 import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
-import { MAX_FILE_IMAGE_SIZE } from "../../constants/fileConstants.js";
+import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
 
 import multer from "multer";
 const storage = multer.memoryStorage();

@@ -1,6 +1,6 @@
 import { fileTypeFromBuffer } from "file-type";
 import fs from "fs";
-import { ACCEPTED_IMAGE_TYPES } from "../../constants/fileConstants.js";
+import { ACCEPTED_IMAGE_TYPES } from "../constants/fileConstants.js";
 
 export const fileValidation = async (req, res, next) => {
   try {

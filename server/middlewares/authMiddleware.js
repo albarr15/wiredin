@@ -2,7 +2,6 @@ import { supabase } from "../supabaseClient.js";
 
 const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(process.env.SUPABASE_URL);
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized: No token provided" });

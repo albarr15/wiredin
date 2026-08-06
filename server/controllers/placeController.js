@@ -5,8 +5,6 @@ export const createPlace = async (req, res) => {
   const properties = req.body;
 
   const file = req.file;
-  console.log("Body:", req.body);
-  console.log("Image:", req.file);
 
   let uploadData;
   let image_url;
@@ -35,8 +33,6 @@ export const createPlace = async (req, res) => {
       image_url = publicUrlData.publicUrl;
       properties.image_url = image_url;
     }
-
-    console.log("Properties: ", properties);
 
     const place = await Place.create(properties);
 
