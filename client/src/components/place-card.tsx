@@ -1,188 +1,31 @@
 import {
-  AirVentIcon,
-  CarIcon,
   CircleEllipsisIcon,
   Clock,
   Coffee,
-  CookieIcon,
-  DogIcon,
-  DoorOpenIcon,
-  GlassWaterIcon,
   Heart,
   MapPin,
   PhilippinePeso,
-  Plug,
-  Star,
-  ToiletIcon,
-  Volume1Icon,
-  Volume2Icon,
-  VolumeIcon,
-  WifiIcon,
 } from "lucide-react";
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardAction,
   CardContent,
 } from "./ui/card";
-import { z } from "zod";
+
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
-
-const AmenitySchema = z.object({
-  id: z.uuid(),
-  place_id: z.uuid(),
-  has_wifi: z.boolean(),
-  wifi_quality: z.enum(["UNAVAILABLE", "SLOW", "MODERATE", "FAST", "UNKNOWN"]),
-  has_outlets: z.boolean(), // fixed: was missing ()
-  outlet_availability: z.enum([
-    "UNAVAILABLE",
-    "FEW",
-    "MODERATE",
-    "MANY",
-    "UNKNOWN",
-  ]),
-  noise_level: z.enum(["LOW", "MODERATE", "HIGH", "UNKNOWN"]),
-  has_parking: z.boolean(),
-  parking_availability: z.enum([
-    "UNAVAILABLE",
-    "LIMITED",
-    "AVAILABLE",
-    "UNKNOWN",
-  ]),
-  has_toilets: z.boolean(),
-  has_meeting_rooms: z.boolean(),
-  meeting_room_count: z.number(),
-  has_free_snacks: z.boolean(),
-  has_free_water: z.boolean(),
-  has_airconditioning: z.boolean(),
-  is_pet_friendly: z.boolean(),
-});
-
-const PlaceSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  address_id: z.uuid(),
-  created_by: z.uuid(),
-  category: z.enum(["CAFE", "COWORKING_SPACE", "LIBRARY", "OTHER"]),
-
-  // optionals
-  pricing_tier: z
-    .string()
-    .regex(/^\d+-\d+$/, {
-      error:
-        "The pricing_tier must follow the format: [lowest_price]-[highest_price]",
-    })
-    .optional(),
-  image_url: z.preprocess(
-    (value) => (value === "" ? undefined : value),
-    z.url().optional(),
-  ),
-  phone: z
-    .string()
-    .regex(/^\+639\d{9}$/, {
-      error: "The phone must follow the format: +639000000000 (no spaces)",
-    })
-    .optional(),
-  email_address: z.email().optional(),
-  facebook_url: z.url().optional(),
-  instagram_url: z.url().optional(),
-  tiktok_url: z.url().optional(),
-  website_url: z.url().optional(),
-});
-
-type AmenityType = z.infer<typeof AmenitySchema>;
-type PlaceType = z.infer<typeof PlaceSchema>;
+import type { AmenityType } from "@/types/AmenityType";
+import type { PlaceType } from "@/types/PlaceType";
+import { AMENITY_BADGES } from "./amenity-badges";
+import StarRating from "./star-rating";
 
 interface PlaceCardProps extends React.ComponentPropsWithoutRef<"div"> {
   place: PlaceType;
   amenity?: AmenityType;
 }
-const NOISE_ICON: Record<AmenityType["noise_level"], typeof VolumeIcon> = {
-  LOW: VolumeIcon,
-  MODERATE: Volume1Icon,
-  HIGH: Volume2Icon,
-  UNKNOWN: VolumeIcon,
-};
-
-const NOISE_LABEL: Record<AmenityType["noise_level"], string> = {
-  LOW: "Low Noise",
-  MODERATE: "Moderate Noise",
-  HIGH: "High Noise",
-  UNKNOWN: "Noise Unknown",
-};
-
-type BadgeConfig = {
-  key: string;
-  show: (a: AmenityType) => boolean;
-  icon: (a: AmenityType) => React.ElementType;
-  label: (a: AmenityType) => string;
-};
-const AMENITY_BADGES: BadgeConfig[] = [
-  {
-    key: "wifi",
-    show: (a) => a.has_wifi,
-    icon: () => WifiIcon,
-    label: () => "With Wifi",
-  },
-  {
-    key: "outlets",
-    show: (a) => a.has_outlets,
-    icon: () => Plug,
-    label: () => "With Outlets",
-  },
-  {
-    key: "noise",
-    show: (a) => a.noise_level !== "UNKNOWN",
-    icon: (a) => NOISE_ICON[a.noise_level],
-    label: (a) => NOISE_LABEL[a.noise_level],
-  },
-  {
-    key: "parking",
-    show: (a) => a.has_parking,
-    icon: () => CarIcon,
-    label: () => "Parking",
-  },
-  {
-    key: "toilets",
-    show: (a) => a.has_toilets,
-    icon: () => ToiletIcon,
-    label: () => "Toilets",
-  },
-  {
-    key: "meeting_rooms",
-    show: (a) => a.has_meeting_rooms,
-    icon: () => DoorOpenIcon,
-    label: () => "Meeting Rooms",
-  },
-  {
-    key: "aircon",
-    show: (a) => a.has_airconditioning,
-    icon: () => AirVentIcon,
-    label: () => "Airconditioning",
-  },
-  {
-    key: "pet_friendly",
-    show: (a) => a.is_pet_friendly,
-    icon: () => DogIcon,
-    label: () => "Pet-friendly",
-  },
-  {
-    key: "free_water",
-    show: (a) => a.has_free_water,
-    icon: () => GlassWaterIcon,
-    label: () => "Free Water",
-  },
-  {
-    key: "free_snacks",
-    show: (a) => a.has_free_snacks,
-    icon: () => CookieIcon,
-    label: () => "Free Snacks",
-  },
-];
 
 export default function PlaceCard({
   place,
@@ -222,7 +65,7 @@ export default function PlaceCard({
           src={
             place.image_url ?? "/public/images/Placeholder_view_vector.svg.png"
           }
-          alt=""
+          alt={`${place.name} photo`}
           className="ml-4 size-32 object-cover shrink-0 rounded-md"
         />
         <div className="w-full">
@@ -233,17 +76,7 @@ export default function PlaceCard({
               <CardTitle>{place.name}</CardTitle>
             </div>
 
-            <div className="flex gap-2 mb-2">
-              <span>4.8</span>
-              <div className="flex">
-                <Star fill="orange" color="none" size={16} />
-                <Star fill="orange" color="none" size={16} />
-                <Star fill="orange" color="none" size={16} />
-                <Star fill="orange" color="none" size={16} />
-                <Star fill="orange" color="none" size={16} />
-              </div>
-              <span className="font-light">(8 reviews)</span>
-            </div>
+            <StarRating rating={4.3} reviewCount={10} />
 
             <CardAction>
               <Button variant={"secondary"}>
@@ -252,15 +85,21 @@ export default function PlaceCard({
             </CardAction>
           </CardHeader>
           <CardContent className="flex gap-2 flex-col">
-            <div className="flex align-items gap-2">
-              <MapPin size={16} strokeWidth={1.5} /> {place.address_id}
+            <div className="flex gap-2">
+              <MapPin className="shrink-0" size={16} strokeWidth={1.5} />{" "}
+              {place.address_id}
             </div>
             <div className="flex w-2/3 justify-between">
-              <div className="flex align-items gap-2">
-                <Clock size={16} strokeWidth={1.5} /> Scheuklde
+              <div className="flex gap-2">
+                <Clock className="shrink-0" size={16} strokeWidth={1.5} />{" "}
+                Scheuklde
               </div>
-              <div className="flex align-items gap-2">
-                <PhilippinePeso size={16} strokeWidth={1.5} />{" "}
+              <div className="flex gap-2">
+                <PhilippinePeso
+                  className="shrink-0"
+                  size={16}
+                  strokeWidth={1.5}
+                />
                 {place.pricing_tier}
               </div>
             </div>
