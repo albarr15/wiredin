@@ -36,15 +36,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import PlaceCard from "@/components/place-card";
+import { z } from "zod";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -89,6 +82,115 @@ export default function Home() {
   const [selectedAmenities, setSelectedAmenities] = React.useState<string[]>(
     [],
   );
+
+  const PlaceSchema = z.object({
+    id: z.uuid(),
+    name: z.string(),
+    address_id: z.uuid(),
+    created_by: z.uuid(),
+    category: z.enum(["CAFE", "COWORKING_SPACE", "LIBRARY", "OTHER"]),
+
+    // optionals
+    pricing_tier: z
+      .string()
+      .regex(/^\d+-\d+$/, {
+        error:
+          "The pricing_tier must follow the format: [lowest_price]-[highest_price]",
+      })
+      .optional(),
+    image_url: z.preprocess(
+      (value) => (value === "" ? undefined : value),
+      z.url().optional(),
+    ),
+    phone: z
+      .string()
+      .regex(/^\+639\d{9}$/, {
+        error: "The phone must follow the format: +639000000000 (no spaces)",
+      })
+      .optional(),
+    email_address: z.email().optional(),
+    facebook_url: z.url().optional(),
+    instagram_url: z.url().optional(),
+    tiktok_url: z.url().optional(),
+    website_url: z.url().optional(),
+  });
+  type PlaceType = z.infer<typeof PlaceSchema>;
+
+  const AmenitySchema = z.object({
+    id: z.uuid(),
+    place_id: z.uuid(),
+    has_wifi: z.boolean(),
+    wifi_quality: z.enum([
+      "UNAVAILABLE",
+      "SLOW",
+      "MODERATE",
+      "FAST",
+      "UNKNOWN",
+    ]),
+    has_outlets: z.boolean(), // fixed: was missing ()
+    outlet_availability: z.enum([
+      "UNAVAILABLE",
+      "FEW",
+      "MODERATE",
+      "MANY",
+      "UNKNOWN",
+    ]),
+    noise_level: z.enum(["LOW", "MODERATE", "HIGH", "UNKNOWN"]),
+    has_parking: z.boolean(),
+    parking_availability: z.enum([
+      "UNAVAILABLE",
+      "LIMITED",
+      "AVAILABLE",
+      "UNKNOWN",
+    ]),
+    has_toilets: z.boolean(),
+    has_meeting_rooms: z.boolean(),
+    meeting_room_count: z.number(),
+    has_free_snacks: z.boolean(),
+    has_free_water: z.boolean(),
+    has_airconditioning: z.boolean(),
+    is_pet_friendly: z.boolean(),
+  });
+
+  type AmenityType = z.infer<typeof AmenitySchema>;
+
+  const samplePlace: PlaceType = {
+    id: "8f14e45f-ceea-4d29-b943-56c50b52d0e2",
+    name: "Commune Café & Coworking",
+    address_id: "a1b2c3d4-e5f6-4789-9abc-def012345678",
+    created_by: "c9f8e7d6-b5a4-4392-8271-6f5e4d3c2b1a",
+    category: "COWORKING_SPACE",
+
+    // optionals
+    pricing_tier: "200-500",
+    image_url:
+      "https://iaqyoyutytgsnvcziwrx.supabase.co/storage/v1/object/public/place-images/public/another%20name3/1785150961253-IMG_1556.JPG",
+    phone: "+639171234567",
+    email_address: "hello@communecafe.ph",
+    facebook_url: "https://facebook.com/communecafeph",
+    instagram_url: "https://instagram.com/communecafeph",
+    tiktok_url: "https://tiktok.com/@communecafeph",
+    website_url: "https://communecafe.ph",
+  };
+
+  const sampleAmenity: AmenityType = {
+    id: "5b6c7d8e-9f0a-4b1c-8d2e-3f4a5b6c7d8e",
+    place_id: "8f14e45f-ceea-4d29-b943-56c50b52d0e2",
+    has_wifi: true,
+    wifi_quality: "FAST",
+    has_outlets: true,
+    outlet_availability: "MANY",
+    noise_level: "MODERATE",
+    has_parking: true,
+    parking_availability: "LIMITED",
+    has_toilets: true,
+    has_meeting_rooms: false,
+    meeting_room_count: 0,
+    has_free_snacks: false,
+    has_free_water: true,
+    has_airconditioning: true,
+    is_pet_friendly: false,
+  };
 
   return (
     <>
@@ -220,19 +322,11 @@ export default function Home() {
               </Select>
             </div>
           </div>
-          <Card onClick={() => checkAuth()}>
-            <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-              <CardDescription>Card Description</CardDescription>
-              <CardAction>Card Action</CardAction>
-            </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-            <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter>
-          </Card>
+          <PlaceCard
+            onClick={() => checkAuth()}
+            place={samplePlace}
+            amenity={sampleAmenity}
+          ></PlaceCard>
         </div>
         <div className="bg-secondary p-6 pr-8 hidden md:block md:flex-1">
           {/* map here */}
