@@ -8,10 +8,12 @@ import {
   CreatePlaceSchema,
   DeletePlaceSchema,
 } from "../schemas/placeSchemas.js";
+import amenityRoutes from "./amenityRoutes.js";
 import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
 import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
 
 import multer from "multer";
+
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
@@ -40,4 +42,5 @@ router.post(
 
 router.delete("/:id", validate(DeletePlaceSchema), placeController.deletePlace);
 
+router.use("/:place_id/amenities", amenityRoutes);
 export default router;
