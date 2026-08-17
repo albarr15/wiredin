@@ -9,6 +9,8 @@ import {
   DeletePlaceSchema,
 } from "../schemas/placeSchemas.js";
 import amenityRoutes from "./amenityRoutes.js";
+import addressRoutes from "./addressRoutes.js";
+
 import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
 import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
 
@@ -43,4 +45,6 @@ router.post(
 router.delete("/:id", validate(DeletePlaceSchema), placeController.deletePlace);
 
 router.use("/:place_id/amenities", amenityRoutes);
+router.use("/:place_id/addresses", addressRoutes);
+
 export default router;
