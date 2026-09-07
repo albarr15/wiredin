@@ -1,5 +1,4 @@
 import express from "express";
-import { pool } from "../config/db.js";
 import * as placeController from "../controllers/placeController.js";
 import { validate } from "../middlewares/validationMiddleware.js";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../schemas/placeSchemas.js";
 import amenityRoutes from "./amenityRoutes.js";
 import addressRoutes from "./addressRoutes.js";
+import scheduleRoutes from "./scheduleRoutes.js";
 
 import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
 import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
@@ -46,5 +46,6 @@ router.delete("/:id", validate(DeletePlaceSchema), placeController.deletePlace);
 
 router.use("/:place_id/amenities", amenityRoutes);
 router.use("/:place_id/addresses", addressRoutes);
+router.use("/:place_id/schedules", scheduleRoutes);
 
 export default router;
