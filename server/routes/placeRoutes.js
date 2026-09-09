@@ -10,6 +10,7 @@ import {
 import amenityRoutes from "./amenityRoutes.js";
 import addressRoutes from "./addressRoutes.js";
 import scheduleRoutes from "./scheduleRoutes.js";
+import reviewRoutes from "./reviewRoutes.js";
 
 import { fileValidation } from "../middlewares/fileValidationMiddleware.js";
 import { MAX_FILE_IMAGE_SIZE } from "../constants/fileConstants.js";
@@ -47,5 +48,6 @@ router.delete("/:id", validate(DeletePlaceSchema), placeController.deletePlace);
 router.use("/:place_id/amenities", amenityRoutes);
 router.use("/:place_id/addresses", addressRoutes);
 router.use("/:place_id/schedules", scheduleRoutes);
+router.use("/:place_id/reviews", reviewRoutes);
 
 export default router;
