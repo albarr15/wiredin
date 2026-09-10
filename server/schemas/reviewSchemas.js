@@ -18,13 +18,21 @@ const ReviewSchema = z.object({
 });
 
 const IdParamSchema = z.object({ id: z.uuid() });
+const PlaceIdParamSchema = z.object({ place_id: z.uuid() });
 
 export const CreateReviewSchema = z.object({
-  body: ReviewSchema.omit({ id: true }),
+  body: ReviewSchema.omit({ id: true, place_id: true, created_by: true }),
+  params: PlaceIdParamSchema,
 });
 
 export const UpdateReviewSchema = z.object({
-  body: ReviewSchema.omit({ id: true }).partial(),
+  body: ReviewSchema.omit({
+    id: true,
+    created_by: true,
+    place_id: true,
+  })
+    .partial()
+    .strict(),
   params: IdParamSchema,
 });
 

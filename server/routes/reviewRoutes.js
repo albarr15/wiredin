@@ -9,6 +9,7 @@ import {
   UpdateReviewSchema,
 } from "../schemas/reviewSchemas.js";
 import { validatePlace } from "../middlewares/validatePlaceMiddleware.js";
+import authenticateUser from "../middlewares/authMiddleware.js";
 
 const router = express.Router({ mergeParams: true }); // mergeParams to access place_id from parent router
 
@@ -30,13 +31,15 @@ router.post(
   "/",
   validate(CreateReviewSchema),
   validatePlace,
+  authenticateUser,
   reviewController.createReview,
 );
 
 router.patch(
-  "/",
+  "/:id",
   validate(UpdateReviewSchema),
   validatePlace,
+  authenticateUser,
   reviewController.updateReview,
 );
 
@@ -44,6 +47,7 @@ router.delete(
   "/:id",
   validate(DeleteReviewSchema),
   validatePlace,
+  authenticateUser,
   reviewController.deleteReview,
 );
 

@@ -1,7 +1,9 @@
 import { Review } from "../models/reviewModels.js";
 
 export const createReview = async (req, res) => {
-  const properties = { ...req.body };
+  const { place_id } = req.params;
+  const user_id = req.user.id;
+  const properties = { ...req.body, place_id, created_by: user_id };
 
   try {
     const review = await Review.create(properties);
@@ -64,21 +66,28 @@ export const getReviewsByPlaceId = async (req, res) => {
 
 export const updateReview = async (req, res) => {
   const { id } = req.params;
-  const updates = req.body;
+  const user_id = req.user.id;
+  const updates = { ...req.body, created_by: user_id };
 
   try {
-    const review = await Review.update(id, updates);
+    const review = await Review.getById(id);
 
     if (!review) {
       return res.status(404).json({
         error: "Review not found.",
       });
+    } else if (review["created_by"] !== user_id) {
+      return res.status(403).json({
+        error: "Review creator does not match with user id.",
+      });
     }
+
+    const updatedReview = await Review.update(id, updates);
 
     return res.status(200).json({
       success: true,
       message: "Successfully updated review.",
-      data: review,
+      data: updatedReview,
     });
   } catch (err) {
     return res.status(500).json({
@@ -89,6 +98,7 @@ export const updateReview = async (req, res) => {
 
 export const deleteReview = async (req, res) => {
   const { id } = req.params;
+  const user_id = req.user.id;
 
   try {
     const review = await Review.getById(id);
@@ -96,6 +106,10 @@ export const deleteReview = async (req, res) => {
     if (!review) {
       return res.status(404).json({
         error: "Review not found.",
+      });
+    } else if (review["created_by"] !== user_id) {
+      return res.status(403).json({
+        error: "Review creator does not match with user id.",
       });
     }
 
