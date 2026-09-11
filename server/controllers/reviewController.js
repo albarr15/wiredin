@@ -42,6 +42,28 @@ export const getReviewById = async (req, res) => {
   }
 };
 
+export const getReviewsByUserId = async (req, res) => {
+  const user_id = req.user.id;
+
+  try {
+    const review = await Review.getByUserId(user_id);
+
+    if (!review) {
+      return res.status(404).json({ error: "Review not found." });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully fetched review.",
+      data: review,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
 export const getReviewsByPlaceId = async (req, res) => {
   const { place_id } = req.params;
 

@@ -28,6 +28,19 @@ export const Review = {
     return result.rows;
   },
 
+  getByUserId: async (user_id) => {
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM reviews
+      WHERE created_by = $1;
+    `,
+      [user_id],
+    );
+
+    return result.rows;
+  },
+
   create: async (properties) => {
     const keys = Object.keys(properties);
 

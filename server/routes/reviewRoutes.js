@@ -14,6 +14,13 @@ import authenticateUser from "../middlewares/authMiddleware.js";
 const router = express.Router({ mergeParams: true }); // mergeParams to access place_id from parent router
 
 router.get(
+  "/mine",
+  validatePlace,
+  authenticateUser,
+  reviewController.getReviewsByUserId,
+);
+
+router.get(
   "/:id",
   validate(GetReviewByIdSchema),
   validatePlace,
