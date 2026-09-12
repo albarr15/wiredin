@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { type Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
+import OnboardUserDialog from "@/components/OnboardUserDialog";
 
 type AuthContextValue = {
   session: Session | null;
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextValue>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showOnboardUserDialog, setShowOnboardUserDialog] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -28,8 +30,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
 
-      if (event === "SIGNED_IN") {
+      if (event === "SIGNED_IN" && session) {
         // handle sign in event
+
+        const user = session.user;
+
+        // // Check if the email was confirmed within the last few seconds
+        if (user) {
+          const emailConfirmedAt = user.confirmed_at
+            ? new Date(user.confirmed_at).getTime()
+            : null;
+
+          if (!emailConfirmedAt) return; // not confirmed yet
+
+          const now = new Date().getTime();
+          const isJustConfirmed = now - emailConfirmedAt < 1000 * 120;
+
+          if (isJustConfirmed) {
+            alert("User just finished confirming their email!");
+            // Trigger your welcome modal, analytics, or redirect here
+            // TODO: trigger dialog here
+            setShowOnboardUserDialog(true);
+          }
+        }
       } else if (event === "SIGNED_OUT") {
         console.log("SIGNED_OUT", session);
         setSession(null);

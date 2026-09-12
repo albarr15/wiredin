@@ -17,7 +17,6 @@ export const CreateUserSchema = z.object({
 
 export const UpdateUserSchema = z.object({
   body: UserSchema.omit({ id: true }).partial(),
-  params: IdParamSchema,
 });
 
 export const DeleteUserSchema = z.object({

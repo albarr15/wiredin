@@ -30,9 +30,9 @@ router.post(
 );
 
 router.patch(
-  "/:id",
+  "/me",
   validate(UpdateUserSchema),
-  validateUser,
+  authenticateUser,
   userController.updateUser,
 );
 

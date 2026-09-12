@@ -42,8 +42,8 @@ export const getUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id } = req.params;
   const updates = req.body;
+  const id = req.user.id;
 
   try {
     const user = await User.update(id, updates);

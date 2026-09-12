@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import { Button } from "../ui/button";
 import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
+import OnboardUserDialog from "@/components/OnboardUserDialog";
 
 export default function MainLayout() {
   const { user } = useAuth();
@@ -23,6 +24,8 @@ export default function MainLayout() {
 
       <div className="flex flex-col gap-8 px-8 py-8 lg:px-16">
         <Outlet />
+        {/* TODO: Remove once AuthContext SIGNED_IN trigger is resolved */}
+        {user && <OnboardUserDialog />}
       </div>
     </>
   );

@@ -17,6 +17,8 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -38,6 +40,13 @@ export function SignUpForm({
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            role: "USER",
+          },
+        },
       });
       if (error) throw error;
       setSuccess(true);
@@ -74,6 +83,32 @@ export function SignUpForm({
           <CardContent>
             <form onSubmit={handleSignUp}>
               <div className="flex flex-col gap-6">
+                <div className="flex gap-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="first-name">First Name</Label>
+                    <Input
+                      id="first-name"
+                      type="text"
+                      placeholder="Jane"
+                      required
+                      autoComplete="given-name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="last-name">Last Name</Label>
+                    <Input
+                      id="last-name"
+                      type="text"
+                      placeholder="Doe"
+                      required
+                      autoComplete="family-name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -81,6 +116,7 @@ export function SignUpForm({
                     type="email"
                     placeholder="m@example.com"
                     required
+                    autoComplete="e"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
