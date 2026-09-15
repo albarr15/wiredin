@@ -12,6 +12,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase/client";
 import { AtSign } from "lucide-react";
 import { useState } from "react";
 
@@ -21,7 +22,7 @@ export default function OnboardUserDialog() {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const { session, user } = useAuth();
+  const { session, user, isOnboardDialogOpen, closeOnboardDialog } = useAuth();
 
   const handleUsernameEdit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +53,10 @@ export default function OnboardUserDialog() {
 
       setUsername("");
       setSuccess(true);
+      closeOnboardDialog();
+
+      // Update supabase raw user metadata to sync with new username
+      await supabase.auth.updateUser({ data: { user_name: username } });
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -60,10 +65,7 @@ export default function OnboardUserDialog() {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Open Dialog</Button>
-      </DialogTrigger>
+    <Dialog open={isOnboardDialogOpen} onOpenChange={closeOnboardDialog}>
       <DialogContent className="sm:max-w-sm" showCloseButton={false}>
         <form onSubmit={handleUsernameEdit}>
           <DialogHeader>
