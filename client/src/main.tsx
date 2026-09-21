@@ -14,11 +14,13 @@ import AuthLayout from "./components/layouts/AuthLayout.tsx";
 import MainLayout from "./components/layouts/MainLayout.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { ProtectedRoute } from "./components/layouts/ProtectedRoute.tsx";
+import OnboardUserDialog from "./components/OnboardUserDialog.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
+        <OnboardUserDialog />
         <Routes>
           <Route element={<AuthLayout />}>
             <Route path="login" element={<Login />} />

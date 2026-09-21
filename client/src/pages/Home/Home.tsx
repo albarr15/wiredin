@@ -32,20 +32,20 @@ export default function Home() {
       return;
     }
 
-    // TODO: edit this to the target protected route
+    // // TODO: edit this to the target protected route
 
-    console.log("fetching backend user data ...");
-    fetch("/api/profile", {
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.message);
-        location.href = "/profile";
-      })
-      .catch((error) => console.error("Error fetching data: ", error));
+    // console.log("fetching backend user data ...");
+    // fetch("/api/profile", {
+    //   headers: {
+    //     Authorization: `Bearer ${session?.access_token}`,
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data.message);
+    //     location.href = "/profile";
+    //   })
+    //   .catch((error) => console.error("Error fetching data: ", error));
   };
 
   return (

@@ -20,7 +20,6 @@ export default function MainLayout() {
       <div className="w-full px-8 py-6 bg-amber-700">
         {user && <Button onClick={() => signOut()}>Sign out</Button>}
       </div>
-
       <div className="flex flex-col gap-8 px-8 py-8 lg:px-16">
         <Outlet />
       </div>
