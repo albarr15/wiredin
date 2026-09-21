@@ -15,6 +15,7 @@ import MainLayout from "./components/layouts/MainLayout.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { ProtectedRoute } from "./components/layouts/ProtectedRoute.tsx";
 import OnboardUserDialog from "./components/OnboardUserDialog.tsx";
+import HomeLayout from "./components/layouts/HomeLayout.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -27,6 +28,9 @@ createRoot(document.getElementById("root")!).render(
             <Route path="sign-up" element={<Signup />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="update-password" element={<UpdatePassword />} />
+          </Route>
+          <Route element={<HomeLayout />}>
+            <Route path="/" element={<Home />} />
           </Route>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />

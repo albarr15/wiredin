@@ -1,56 +1,29 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Link } from "react-router";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { DashboardSearchBar } from "@/components/home/DashboardSearchBar";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const { session, user } = useAuth();
+  const { user } = useAuth();
 
   const checkAuth = async () => {
     if (!user) {
       setOpen(true);
       return;
     }
-
-    // // TODO: edit this to the target protected route
-
-    // console.log("fetching backend user data ...");
-    // fetch("/api/profile", {
-    //   headers: {
-    //     Authorization: `Bearer ${session?.access_token}`,
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data.message);
-    //     location.href = "/profile";
-    //   })
-    //   .catch((error) => console.error("Error fetching data: ", error));
   };
 
   return (
+    <div className="flex h-full *:flex *:flex-1 *:p-6">
+      <div>
+        <DashboardSearchBar />
+      </div>
+      <div className="bg-secondary">b</div>
+    </div>
+    /*
     <>
-      <h1>Home Page</h1>
+    // TODO: Integrate to current dashboard
       <AlertDialog open={open} onOpenChange={setOpen}>
         {open && (
           <AlertDialogContent>
@@ -86,6 +59,6 @@ export default function Home() {
           <p>Card Footer</p>
         </CardFooter>
       </Card>
-    </>
+    </> */
   );
 }
