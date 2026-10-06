@@ -6,6 +6,17 @@ import AmenitiesSelect from "./AmenitiesSelect";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { BookmarkIcon, PlugIcon, WifiIcon } from "lucide-react";
+import PlaceCard from "@/components/home/PlaceCard";
+
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -46,9 +57,28 @@ export default function Home() {
             With Outlets
           </Toggle>
         </div>
+
+        <div className="flex flex-col mt-8 gap-4">
+          <Card onClick={() => checkAuth()}>
+            <CardHeader>
+              <CardTitle>Card Title</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+              <CardAction>Card Action</CardAction>
+            </CardHeader>
+            <CardContent>
+              <p>Card Content</p>
+            </CardContent>
+            <CardFooter>
+              <p>Card Footer</p>
+            </CardFooter>
+          </Card>
+
+          <PlaceCard />
+        </div>
       </div>
       <div className="bg-secondary"></div>
     </div>
+
     /*
     <>
     // TODO: Integrate to current dashboard
