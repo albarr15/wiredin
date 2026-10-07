@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import { Button } from "../ui/button";
 import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
+import NavigationBar from "../NavigationBar";
 
 export default function MainLayout() {
   const { user } = useAuth();
@@ -16,10 +16,7 @@ export default function MainLayout() {
 
   return (
     <>
-      {/* TODO: NAVBAR HERE */}
-      <div className="w-full px-8 py-6 bg-amber-700">
-        {user && <Button onClick={() => signOut()}>Sign out</Button>}
-      </div>
+      <NavigationBar />
       <div className="flex flex-col gap-8 px-8 py-8 lg:px-16">
         <Outlet />
       </div>
