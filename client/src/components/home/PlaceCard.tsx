@@ -21,12 +21,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Toggle } from "../ui/toggle";
 
-export default function PlaceCard() {
+import { cn } from "@/lib/utils";
+
+export default function PlaceCard({
+  className,
+  onClick,
+  // TODO: create sm size for mobile UI
+}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
   return (
-    <Card className="flex flex-row! @container max-h-56">
+    <Card
+      onClick={onClick}
+      className={cn("flex flex-row! @container max-h-56", className)}
+    >
       <img
         src={SampleImg}
-        className="object-cover @xl:w-1/3 w-1/4 border rounded m-2 h-full shadow-sm"
+        className="object-cover w-1/3 border rounded m-2 shadow-sm"
       ></img>
       <div className="flex flex-col w-full h-full gap-(--card-spacing) pt-(--card-spacing)!">
         <CardHeader>

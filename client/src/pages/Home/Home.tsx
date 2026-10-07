@@ -3,24 +3,23 @@ import { useAuth } from "@/context/AuthContext";
 import { DashboardSearchBar } from "@/components/home/DashboardSearchBar";
 import PlaceTypeSelect from "./PlaceTypeSelect";
 import AmenitiesSelect from "./AmenitiesSelect";
-import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
-import { BookmarkIcon, PlugIcon, WifiIcon } from "lucide-react";
+import { PlugIcon, WifiIcon } from "lucide-react";
 import PlaceCard from "@/components/home/PlaceCard";
-
+import { Link } from "react-router";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
-  const [alignItemWithTrigger, setAlignItemWithTrigger] = useState(true);
 
   const { user } = useAuth();
 
@@ -32,7 +31,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-full *:flex *:flex-1 *:p-6">
+    <div className="flex min-h-screen *:flex *:flex-1 *:p-6">
       <div className="flex flex-col gap-2">
         <DashboardSearchBar />
         <div className="flex gap-2">
@@ -59,29 +58,27 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col mt-8 gap-4">
-          <Card onClick={() => checkAuth()}>
-            <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-              <CardDescription>Card Description</CardDescription>
-              <CardAction>Card Action</CardAction>
-            </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-            <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter>
-          </Card>
-
-          <PlaceCard />
+          <Link to="/places/1">
+            <PlaceCard />
+          </Link>
+          <Link to="/places/1">
+            <PlaceCard />
+          </Link>{" "}
+          <Link to="/places/1">
+            <PlaceCard />
+          </Link>{" "}
+          <Link to="/places/1">
+            <PlaceCard />
+          </Link>{" "}
+          <Link to="/places/1">
+            <PlaceCard />
+          </Link>
         </div>
       </div>
-      <div className="bg-secondary"></div>
-    </div>
-
-    /*
-    <>
-    // TODO: Integrate to current dashboard
+      <div className="bg-secondary sticky self-start min-h-screen top-0">
+        {" "}
+        abc
+      </div>
       <AlertDialog open={open} onOpenChange={setOpen}>
         {open && (
           <AlertDialogContent>
@@ -104,19 +101,6 @@ export default function Home() {
           </AlertDialogContent>
         )}
       </AlertDialog>
-      <Card onClick={() => checkAuth()}>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-          <CardAction>Card Action</CardAction>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </> */
+    </div>
   );
 }
