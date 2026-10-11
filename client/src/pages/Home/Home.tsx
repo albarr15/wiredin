@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { DashboardSearchBar } from "@/components/home/DashboardSearchBar";
 import PlaceTypeSelect from "./PlaceTypeSelect";
 import AmenitiesSelect from "./AmenitiesSelect";
@@ -21,18 +20,9 @@ import {
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const { user } = useAuth();
-
-  const checkAuth = async () => {
-    if (!user) {
-      setOpen(true);
-      return;
-    }
-  };
-
   return (
-    <div className="flex min-h-screen *:flex *:flex-1 *:p-6">
-      <div className="flex flex-col gap-2">
+    <div className="flex min-h-full w-full *:p-6">
+      <main className="flex flex-col gap-2 flex-1">
         <DashboardSearchBar />
         <div className="flex gap-2">
           <PlaceTypeSelect />
@@ -74,11 +64,10 @@ export default function Home() {
             <PlaceCard />
           </Link>
         </div>
-      </div>
-      <div className="bg-secondary sticky self-start min-h-screen top-0">
-        {" "}
+      </main>
+      <aside className="bg-secondary flex-1 lg:w-1/2 md:w-1/3 hidden md:flex lg:shrink-0 lg:sticky lg:self-start lg:h-[calc(100vh-80px)] lg:top-17.25 items-center">
         abc
-      </div>
+      </aside>
       <AlertDialog open={open} onOpenChange={setOpen}>
         {open && (
           <AlertDialogContent>

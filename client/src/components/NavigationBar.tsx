@@ -4,11 +4,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 

@@ -5,7 +5,7 @@ export default function HomeLayout() {
   return (
     <>
       <NavigationBar />
-      <div className="w-screen h-[calc(100vh-80px)]">
+      <div className="h-[calc(100vh-80px)]">
         <Outlet />
       </div>
     </>
