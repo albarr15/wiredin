@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/context/AuthContext";
 import { Spinner } from "@/components/ui/spinner";
+import SampleImg from "@/assets/hero.png";
 
 // TODO: import shared types from backend to maintain consistency
 type Place = {
@@ -114,12 +115,33 @@ export default function Home() {
           )}
 
           {places &&
-            // TODO: create props in PlaceCard for eaach attribute
-            places.map((place, index) => (
-              <Link to="/places/1" key={index}>
-                <PlaceCard />
-              </Link>
-            ))}
+            // TODO: fetch necessary
+            places.map((place, index) => {
+              const placeProps = {
+                name: place.name,
+                category: place.category,
+                pricing_tier: place.pricing_tier,
+                image_url: place.image_url ?? SampleImg,
+
+                rating: 4.3,
+                reviews_amount: null,
+                // need to fetch and process reviews data here
+
+                location: "location here, need to fetch in Address api",
+                // need to fetch and process address data here
+
+                schedule: "9:00 AM - 5:00 PM",
+                // need to fetch and process schedules data here
+
+                amenities: ["has_wifi", "has_outlets"],
+                // need to fetch and process amenities data into a string array here
+              };
+              return (
+                <Link to="/places/1" key={index}>
+                  <PlaceCard {...placeProps} />
+                </Link>
+              );
+            })}
         </div>
       </main>
       <aside className="bg-secondary flex-1 lg:w-1/2 md:w-1/3 hidden md:flex lg:shrink-0 lg:sticky lg:self-start lg:h-[calc(100vh-80px)] lg:top-17.25 items-center">
