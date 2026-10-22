@@ -7,7 +7,7 @@ import { validateUser } from "../middlewares/validateUserMiddleware.js";
 import {
   CreateUserSchema,
   DeleteUserSchema,
-  getUserSchema,
+  GetUserSchema,
   UpdateUserSchema,
 } from "../schemas/userSchemas.js";
 
@@ -17,7 +17,7 @@ const router = express.Router({ mergeParams: true }); // mergeParams to access p
 
 router.get(
   "/:id",
-  validate(getUserSchema),
+  validate(GetUserSchema),
   validateUser,
   userController.getUser,
 );
