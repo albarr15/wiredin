@@ -1,5 +1,6 @@
 {
-  "name": "server",
+  "name": "@wiredin/server",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -11,6 +12,7 @@
     "start": "nodemon index.js"
   },
   "dependencies": {
+    "@wiredin/types": "*",
     "@supabase/supabase-js": "^2.110.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

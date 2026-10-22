@@ -6,7 +6,7 @@ import { validatePlace } from "../middlewares/validatePlaceMiddleware.js";
 import {
   CreateAddressSchema,
   DeleteAddressSchema,
-  getAddressSchema,
+  GetAddressSchema,
   UpdateAddressSchema,
 } from "../schemas/addressSchemas.js";
 
@@ -14,7 +14,7 @@ const router = express.Router({ mergeParams: true }); // mergeParams to access p
 
 router.get(
   "/",
-  validate(getAddressSchema),
+  validate(GetAddressSchema),
   validatePlace,
   addressController.getAddress,
 );

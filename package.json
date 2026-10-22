@@ -1,0 +1,16 @@
+{
+  "name": "wiredin",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "build:types": "npm run build --workspace=@wiredin/types",
+    "build": "npm run build:types && npm run build --workspace=@wiredin/client",
+    "dev:client": "npm run dev --workspace=@wiredin/client",
+    "dev:server": "npm run start --workspace=@wiredin/server"
+  }
+}

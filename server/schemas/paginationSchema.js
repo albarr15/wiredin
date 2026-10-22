@@ -1,6 +1,4 @@
-import { z } from "zod";
-
-export const PaginationSchema = z.object({
-  page: z.coerce.number().int().positive().optional().default(1),
-  limit: z.coerce.number().int().positive().max(100).optional().default(10),
-});
+// Re-exported from @wiredin/types — edit schemas there
+export {
+  PaginationSchema,
+} from "@wiredin/types";

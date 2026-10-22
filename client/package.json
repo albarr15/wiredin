@@ -1,5 +1,5 @@
 {
-  "name": "wiredin",
+  "name": "@wiredin/client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@wiredin/types": "*",
     "@fontsource-variable/geist": "^5.2.9",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",

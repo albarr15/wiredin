@@ -5,7 +5,7 @@ import { validatePlace } from "../middlewares/validatePlaceMiddleware.js";
 import {
   CreateScheduleSchema,
   DeleteScheduleSchema,
-  getScheduleSchema,
+  GetScheduleSchema,
   UpdateScheduleSchema,
 } from "../schemas/scheduleSchemas.js";
 
@@ -13,7 +13,7 @@ const router = express.Router({ mergeParams: true }); // mergeParams to access p
 
 router.get(
   "/",
-  validate(getScheduleSchema),
+  validate(GetScheduleSchema),
   validatePlace,
   scheduleController.getSchedule,
 );
