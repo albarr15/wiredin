@@ -101,6 +101,7 @@ export default function Home() {
             // TODO: fetch necessary
             places.map((place, index) => {
               const placeProps = {
+                id: place.id,
                 name: place.name,
                 category: place.category,
                 pricing_tier: place.pricing_tier,
@@ -110,8 +111,8 @@ export default function Home() {
                 reviews_amount: null,
                 // need to fetch and process reviews data here
 
-                location: "location here, need to fetch in Address api",
-                // need to fetch and process address data here
+                // location: "location here, need to fetch in Address api",
+                // // need to fetch and process address data here
 
                 schedule: "9:00 AM - 5:00 PM",
                 // need to fetch and process schedules data here
