@@ -28,10 +28,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Toggle } from "../ui/toggle";
+import { Toggle } from "@/components/ui/toggle";
 
 import { type Address, type Place } from "@wiredin/types";
 import { useEffect, useState } from "react";
+import { PlaceRating } from "./PlaceRating";
 
 type NonPlaceProps = {
   rating: number;
@@ -120,39 +121,11 @@ export default function PlaceCard(props: PlaceCardProps) {
         <CardHeader>
           <div className="flex flex-row gap-2">
             <CardTitle>{props.name}</CardTitle>
-            {}
+            { }
             <PlaceIcon strokeWidth={1.5} size={18} strokeOpacity={0.8} />
           </div>
           <CardDescription>
-            {props.rating > 0 && (
-              <div className="flex gap-2 items-center">
-                {props.rating}
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <StarIcon
-                      key={index}
-                      className={
-                        index < Math.round(props.rating)
-                          ? "fill-amber-400"
-                          : "fill-secondary"
-                      }
-                      strokeWidth={0}
-                      size={16}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            {props.rating <= 0 && (
-              <div className="flex gap-2 items-center">
-                <StarIcon
-                  className="fill-secondary"
-                  strokeWidth={0}
-                  size={16}
-                />
-                No ratings yet
-              </div>
-            )}
+            {props.rating && <PlaceRating rating={props.rating} />}
           </CardDescription>
           <CardAction>
             <Toggle variant="outline" aria-label="Toggle save">

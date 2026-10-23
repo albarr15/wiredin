@@ -4,7 +4,7 @@ import PlaceTypeSelect from "./PlaceTypeSelect";
 import AmenitiesSelect from "./AmenitiesSelect";
 import { Toggle } from "@/components/ui/toggle";
 import { PlugIcon, WifiIcon } from "lucide-react";
-import PlaceCard from "@/components/home/PlaceCard";
+import PlaceCard from "@/components/home/PlaceCard/PlaceCard";
 import { Link } from "react-router";
 import {
   AlertDialog,
