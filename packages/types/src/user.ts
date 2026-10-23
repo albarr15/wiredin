@@ -1,0 +1,32 @@
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.uuid(),
+  user_name: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  avatar_url: z.string().optional(),
+  role: z.enum(["USER", "ADMIN"]),
+});
+
+const IdParamSchema = z.object({ id: z.uuid() });
+
+export const CreateUserSchema = z.object({
+  body: UserSchema.omit({ id: true }),
+});
+
+export const UpdateUserSchema = z.object({
+  body: UserSchema.omit({ id: true }).partial(),
+});
+
+export const DeleteUserSchema = z.object({
+  params: IdParamSchema,
+});
+
+export const GetUserSchema = z.object({
+  params: IdParamSchema,
+});
+
+export type User = z.infer<typeof UserSchema>;
+export type CreateUserInput = z.infer<typeof CreateUserSchema>["body"];
+export type UpdateUserInput = z.infer<typeof UpdateUserSchema>["body"];

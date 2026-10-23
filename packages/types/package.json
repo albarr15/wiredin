@@ -1,0 +1,24 @@
+{
+  "name": "@wiredin/types",
+  "version": "0.0.0",
+  "description": "Shared Zod schemas and TypeScript types for WiredIn",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}
