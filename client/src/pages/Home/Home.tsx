@@ -6,7 +6,6 @@ import { Toggle } from "@/components/ui/toggle";
 import { PlugIcon, WifiIcon } from "lucide-react";
 import PlaceCard from "@/components/home/PlaceCard";
 import { Link } from "react-router";
-import { ZodUUID } from "zod";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,23 +19,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { Spinner } from "@/components/ui/spinner";
 import SampleImg from "@/assets/hero.png";
-
-// TODO: import shared types from backend to maintain consistency
-type Place = {
-  id: ZodUUID;
-  name: string;
-  address_id: ZodUUID;
-  created_by: ZodUUID;
-  category: string;
-  pricing_tier: string | null;
-  image_url: string | null;
-  phone: string | null;
-  email_address: string | null;
-  facebook_url: string | null;
-  instagram_url: string | null;
-  tiktok_url: string | null;
-  website_url: string | null;
-};
+import { type Place } from "@wiredin/types";
 
 export default function Home() {
   const [open, setOpen] = useState(false);

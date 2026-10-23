@@ -30,11 +30,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Toggle } from "../ui/toggle";
 
-type PlaceCardProps = {
-  name: string;
-  category: string;
-  pricing_tier: string | null;
-  image_url: string;
+import { type Place } from "@wiredin/types";
+
+type NonPlaceProps = {
   rating: number;
   reviews_amount: number | null;
   location: string;
@@ -42,7 +40,14 @@ type PlaceCardProps = {
   amenities: string[];
 };
 
+type PlaceCardProps = Pick<
+  Place,
+  "name" | "category" | "pricing_tier" | "image_url"
+> &
+  NonPlaceProps;
+
 export default function PlaceCard(props: PlaceCardProps) {
+  console.log(typeof props);
   const placeIcons: Record<string, LucideIcon> = {
     CAFE: CoffeeIcon,
     COWORKING_SPACE: BriefcaseIcon,
