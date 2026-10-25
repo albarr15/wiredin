@@ -1,6 +1,6 @@
 import { Place } from "../models/placeModels.js";
 import { Address } from "../models/addressModels.js";
-// import { Schedule } from "../models/scheduleModels.js";
+import { Schedule } from "../models/scheduleModels.js";
 // import { Amenities } from "../models/amenityModels.js";
 
 import { supabase } from "../supabaseClient.js";
@@ -71,18 +71,34 @@ export const getAllPlaces = async (req, res) => {
   try {
     const places = await Place.getAll(limit, offset);
 
-    if (places.length > 0 && include.includes("addresses")) {
+    if (places.length > 0) {
       const ids = places.map((p) => p.id);
-      const addresses = await Address.getMany(ids);
+      const AddressPerPlace = new Map();
+      const SchedulePerPlace = new Map();
 
-      const byPlace = new Map();
-      for (const address of addresses) {
-        if (!byPlace.has(address.place_id)) byPlace.set(address.place_id, []);
-        byPlace.get(address.place_id).push(address);
+      if (include.includes("addresses")) {
+        const addresses = await Address.getMany(ids);
+
+        for (const address of addresses) {
+          if (!AddressPerPlace.has(address.place_id))
+            AddressPerPlace.set(address.place_id, []);
+          AddressPerPlace.get(address.place_id).push(address);
+        }
+      }
+
+      if (include.includes("schedules")) {
+        const schedules = await Schedule.getMany(ids);
+
+        for (const schedule of schedules) {
+          if (!SchedulePerPlace.has(schedule.place_id))
+            SchedulePerPlace.set(schedule.place_id, []);
+          SchedulePerPlace.get(schedule.place_id).push(schedule);
+        }
       }
 
       for (const place of places) {
-        place.addresses = byPlace.get(place.id) || [];
+        place.addresses = AddressPerPlace.get(place.id) || [];
+        place.schedules = SchedulePerPlace.get(place.id) || [];
       }
     }
 

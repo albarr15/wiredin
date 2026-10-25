@@ -14,6 +14,20 @@ export const Schedule = {
     return result.rows;
   },
 
+  getMany: async (place_ids) => {
+    if (place_ids.length === 0) return [];
+    const { rows } = await pool.query(
+      ` SELECT sd.*, s.place_id
+      FROM schedule_days sd
+      JOIN schedules s ON sd.schedule_id = s.id
+      WHERE s.place_id = ANY($1)
+      ORDER BY s.place_id, sd.day_of_week;`,
+      [place_ids],
+    );
+
+    return rows;
+  },
+
   create: async (properties) => {
     const { place_id, days } = properties;
 
