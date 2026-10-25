@@ -1,4 +1,8 @@
 import { Place } from "../models/placeModels.js";
+import { Address } from "../models/addressModels.js";
+// import { Schedule } from "../models/scheduleModels.js";
+// import { Amenities } from "../models/amenityModels.js";
+
 import { supabase } from "../supabaseClient.js";
 
 export const createPlace = async (req, res) => {
@@ -52,13 +56,35 @@ export const createPlace = async (req, res) => {
   }
 };
 
+const ALLOWED_QUERY = ["addresses", "schedules", "amenities"];
+
 export const getAllPlaces = async (req, res) => {
   const page = req.query.page;
   const limit = req.query.limit;
   const offset = (page - 1) * limit;
 
+  const include = (req.query.include || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => ALLOWED_QUERY.includes(s));
+
   try {
     const places = await Place.getAll(limit, offset);
+
+    if (places.length > 0 && include.includes("addresses")) {
+      const ids = places.map((p) => p.id);
+      const addresses = await Address.getMany(ids);
+
+      const byPlace = new Map();
+      for (const address of addresses) {
+        if (!byPlace.has(address.place_id)) byPlace.set(address.place_id, []);
+        byPlace.get(address.place_id).push(address);
+      }
+
+      for (const place of places) {
+        place.addresses = byPlace.get(place.id) || [];
+      }
+    }
 
     return res.status(200).json({
       success: true,
