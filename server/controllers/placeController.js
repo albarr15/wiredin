@@ -1,7 +1,7 @@
 import { Place } from "../models/placeModels.js";
 import { Address } from "../models/addressModels.js";
 import { Schedule } from "../models/scheduleModels.js";
-// import { Amenities } from "../models/amenityModels.js";
+import { Amenity } from "../models/amenityModels.js";
 
 import { supabase } from "../supabaseClient.js";
 
@@ -75,6 +75,7 @@ export const getAllPlaces = async (req, res) => {
       const ids = places.map((p) => p.id);
       const AddressPerPlace = new Map();
       const SchedulePerPlace = new Map();
+      const AmenityPerPlace = new Map();
 
       if (include.includes("addresses")) {
         const addresses = await Address.getMany(ids);
@@ -83,6 +84,24 @@ export const getAllPlaces = async (req, res) => {
           if (!AddressPerPlace.has(address.place_id))
             AddressPerPlace.set(address.place_id, []);
           AddressPerPlace.get(address.place_id).push(address);
+        }
+
+        for (const place of places) {
+          place.addresses = AddressPerPlace.get(place.id) || [];
+        }
+      }
+
+      if (include.includes("amenities")) {
+        const amenities = await Amenity.getMany(ids);
+
+        for (const amenity of amenities) {
+          if (!AmenityPerPlace.has(amenity.place_id))
+            AmenityPerPlace.set(amenity.place_id, []);
+          AmenityPerPlace.get(amenity.place_id).push(amenity);
+        }
+
+        for (const place of places) {
+          place.amenities = AmenityPerPlace.get(place.id) || [];
         }
       }
 
@@ -94,11 +113,10 @@ export const getAllPlaces = async (req, res) => {
             SchedulePerPlace.set(schedule.place_id, []);
           SchedulePerPlace.get(schedule.place_id).push(schedule);
         }
-      }
 
-      for (const place of places) {
-        place.addresses = AddressPerPlace.get(place.id) || [];
-        place.schedules = SchedulePerPlace.get(place.id) || [];
+        for (const place of places) {
+          place.schedules = SchedulePerPlace.get(place.id) || [];
+        }
       }
     }
 

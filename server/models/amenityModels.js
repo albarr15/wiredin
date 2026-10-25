@@ -15,6 +15,18 @@ export const Amenity = {
     return result.rows[0];
   },
 
+  getMany: async (place_ids) => {
+    const { rows } = await pool.query(
+      `
+      SELECT *
+      FROM amenities
+      WHERE place_id = ANY($1);
+    `,
+      [place_ids],
+    );
+    return rows;
+  },
+
   create: async (properties) => {
     const keys = Object.keys(properties);
 
