@@ -12,7 +12,8 @@ const PlaceSchema = z.object({
   pricing_tier: z
     .string()
     .regex(/^\d+-\d+$/, {
-      error: "The pricing_tier must follow the format: [lowest_price]-[highest_price]",
+      error:
+        "The pricing_tier must follow the format: [lowest_price]-[highest_price]",
     })
     .optional(),
   image_url: z.preprocess(
@@ -44,6 +45,10 @@ export const UpdatePlaceSchema = z.object({
 });
 
 export const DeletePlaceSchema = z.object({
+  params: IdParamSchema,
+});
+
+export const GetPlaceSchema = z.object({
   params: IdParamSchema,
 });
 

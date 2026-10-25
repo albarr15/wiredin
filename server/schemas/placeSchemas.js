@@ -4,4 +4,5 @@ export {
   UpdatePlaceSchema,
   DeletePlaceSchema,
   GetAllPlacesSchema,
+  GetPlaceSchema,
 } from "@wiredin/types";

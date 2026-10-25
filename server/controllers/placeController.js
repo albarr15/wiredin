@@ -75,6 +75,47 @@ const attachChildren = async (places, fetch_function, attribute_name) => {
   }
 };
 
+export const getPlace = async (req, res) => {
+  const { id } = req.params;
+
+  const include = (req.query.include || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => ALLOWED_QUERY.includes(s));
+
+  try {
+    const place = await Place.get(id);
+
+    // wrapped single place to an array to use helper function attachChildren for include
+    const places = [];
+    places.push(place);
+
+    if (places.length > 0) {
+      if (include.includes("addresses")) {
+        await attachChildren(places, Address.getMany, "addresses");
+      }
+
+      if (include.includes("amenities")) {
+        await attachChildren(places, Amenity.getMany, "amenities");
+      }
+
+      if (include.includes("schedules")) {
+        await attachChildren(places, Schedule.getMany, "schedules");
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully fetched place.",
+      data: places,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
 export const getAllPlaces = async (req, res) => {
   const page = req.query.page;
   const limit = req.query.limit;
