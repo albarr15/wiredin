@@ -3,6 +3,8 @@ import { Address } from "../models/addressModels.js";
 import { Schedule } from "../models/scheduleModels.js";
 import { Amenity } from "../models/amenityModels.js";
 
+import { ALLOWED_QUERY } from "../constants/placeIncludeConstants.js";
+
 import { supabase } from "../supabaseClient.js";
 
 export const createPlace = async (req, res) => {
@@ -56,7 +58,22 @@ export const createPlace = async (req, res) => {
   }
 };
 
-const ALLOWED_QUERY = ["addresses", "schedules", "amenities"];
+// can be moved to a utils directory should other files need to use this function
+const attachChildren = async (places, fetch_function, attribute_name) => {
+  const ids = places.map((p) => p.id);
+  const grouped = new Map();
+
+  const rows = await fetch_function(ids);
+
+  for (const row of rows) {
+    if (!grouped.has(row.place_id)) grouped.set(row.place_id, []);
+    grouped.get(row.place_id).push(row);
+  }
+
+  for (const place of places) {
+    place[attribute_name] = grouped.get(place.id) || [];
+  }
+};
 
 export const getAllPlaces = async (req, res) => {
   const page = req.query.page;
@@ -72,51 +89,16 @@ export const getAllPlaces = async (req, res) => {
     const places = await Place.getAll(limit, offset);
 
     if (places.length > 0) {
-      const ids = places.map((p) => p.id);
-      const AddressPerPlace = new Map();
-      const SchedulePerPlace = new Map();
-      const AmenityPerPlace = new Map();
-
       if (include.includes("addresses")) {
-        const addresses = await Address.getMany(ids);
-
-        for (const address of addresses) {
-          if (!AddressPerPlace.has(address.place_id))
-            AddressPerPlace.set(address.place_id, []);
-          AddressPerPlace.get(address.place_id).push(address);
-        }
-
-        for (const place of places) {
-          place.addresses = AddressPerPlace.get(place.id) || [];
-        }
+        await attachChildren(places, Address.getMany, "addresses");
       }
 
       if (include.includes("amenities")) {
-        const amenities = await Amenity.getMany(ids);
-
-        for (const amenity of amenities) {
-          if (!AmenityPerPlace.has(amenity.place_id))
-            AmenityPerPlace.set(amenity.place_id, []);
-          AmenityPerPlace.get(amenity.place_id).push(amenity);
-        }
-
-        for (const place of places) {
-          place.amenities = AmenityPerPlace.get(place.id) || [];
-        }
+        await attachChildren(places, Amenity.getMany, "amenities");
       }
 
       if (include.includes("schedules")) {
-        const schedules = await Schedule.getMany(ids);
-
-        for (const schedule of schedules) {
-          if (!SchedulePerPlace.has(schedule.place_id))
-            SchedulePerPlace.set(schedule.place_id, []);
-          SchedulePerPlace.get(schedule.place_id).push(schedule);
-        }
-
-        for (const place of places) {
-          place.schedules = SchedulePerPlace.get(place.id) || [];
-        }
+        await attachChildren(places, Schedule.getMany, "schedules");
       }
     }
 
