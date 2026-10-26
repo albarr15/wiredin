@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { PaginationSchema } from "./pagination.js";
+import { AddressSchema } from "./address.js";
+import { AmenitySchema } from "./amenity.js";
+import { ScheduleDaySchema } from "./scheduleDay.js";
 
-const PlaceSchema = z.object({
+export const PlaceSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   address_id: z.uuid(),
@@ -31,16 +34,33 @@ const PlaceSchema = z.object({
   instagram_url: z.url().optional(),
   tiktok_url: z.url().optional(),
   website_url: z.url().optional(),
+
+  // optional appended child relations (via include query parameter)
+  addresses: z.array(AddressSchema).optional(),
+  amenities: z.array(AmenitySchema).optional(),
+  schedules: z.array(ScheduleDaySchema).optional(),
 });
 
 const IdParamSchema = z.object({ id: z.uuid() });
 
+export const PlaceIncludeQuerySchema = z.object({
+  include: z.string().optional(),
+});
+
 export const CreatePlaceSchema = z.object({
-  body: PlaceSchema,
+  body: PlaceSchema.omit({
+    addresses: true,
+    amenities: true,
+    schedules: true,
+  }),
 });
 
 export const UpdatePlaceSchema = z.object({
-  body: PlaceSchema.partial(),
+  body: PlaceSchema.omit({
+    addresses: true,
+    amenities: true,
+    schedules: true,
+  }).partial(),
   params: IdParamSchema,
 });
 
@@ -50,13 +70,15 @@ export const DeletePlaceSchema = z.object({
 
 export const GetPlaceSchema = z.object({
   params: IdParamSchema,
+  query: PlaceIncludeQuerySchema.optional(),
 });
 
 export const GetAllPlacesSchema = z.object({
-  query: PaginationSchema,
+  query: PaginationSchema.extend(PlaceIncludeQuerySchema),
 });
 
 export type Place = z.infer<typeof PlaceSchema>;
 export type PlaceCategory = Place["category"];
 export type CreatePlaceInput = z.infer<typeof CreatePlaceSchema>["body"];
 export type UpdatePlaceInput = z.infer<typeof UpdatePlaceSchema>["body"];
+

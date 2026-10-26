@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const AmenitySchema = z.object({
+export const AmenitySchema = z.object({
   place_id: z.uuid(),
   has_wifi: z.boolean(),
   wifi_quality: z.enum(["UNAVAILABLE", "SLOW", "MODERATE", "FAST", "UNKNOWN"]),

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const ScheduleDaySchema = z.object({
+export const ScheduleDaySchema = z.object({
   schedule_id: z.uuid(),
   day_of_week: z.enum([
     "MONDAY",

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const AddressSchema = z.object({
+export const AddressSchema = z.object({
   place_id: z.uuid(),
   street: z.string().trim().min(1),
   city: z.string().trim().min(1),
