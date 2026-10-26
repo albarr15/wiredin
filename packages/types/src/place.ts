@@ -74,11 +74,10 @@ export const GetPlaceSchema = z.object({
 });
 
 export const GetAllPlacesSchema = z.object({
-  query: PaginationSchema.extend(PlaceIncludeQuerySchema),
+  query: PaginationSchema.extend(PlaceIncludeQuerySchema.shape),
 });
 
 export type Place = z.infer<typeof PlaceSchema>;
 export type PlaceCategory = Place["category"];
 export type CreatePlaceInput = z.infer<typeof CreatePlaceSchema>["body"];
 export type UpdatePlaceInput = z.infer<typeof UpdatePlaceSchema>["body"];
-

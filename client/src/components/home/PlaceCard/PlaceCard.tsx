@@ -8,26 +8,18 @@ import {
 } from "@/components/ui/card";
 
 import {
-  AirVentIcon,
-  BookIcon,
-  BriefcaseIcon,
   ClockIcon,
   CoffeeIcon,
-  CookieIcon,
-  DogIcon,
-  GlassWaterIcon,
   HeartIcon,
   MapPinIcon,
   MapPinnedIcon,
   PhilippinePesoIcon,
-  PlugIcon,
-  SquareParkingIcon,
-  ToiletIcon,
-  WifiIcon,
+  BookIcon,
+  BriefcaseIcon,
   type LucideIcon,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Toggle } from "@/components/ui/toggle";
+import { PlaceAmenities } from "./PlaceAmenities";
 
 import {
   type Address,
@@ -59,17 +51,6 @@ export default function PlaceCard(props: PlaceCardProps) {
     COWORKING_SPACE: BriefcaseIcon,
     LIBRARY: BookIcon,
     OTHER: MapPinnedIcon,
-  };
-
-  const amenityIcons: Record<string, LucideIcon> = {
-    has_wifi: WifiIcon,
-    has_outlets: PlugIcon,
-    has_parking: SquareParkingIcon,
-    has_toilets: ToiletIcon,
-    has_free_snacks: CookieIcon,
-    has_free_water: GlassWaterIcon,
-    has_airconditioning: AirVentIcon,
-    is_pet_friendly: DogIcon,
   };
 
   const PlaceIcon = placeIcons[props.category];
@@ -117,8 +98,17 @@ export default function PlaceCard(props: PlaceCardProps) {
     getPlace(props.id);
   }, []);
   const address = place?.addresses?.[0];
-  const amenities = place?.amenities ?? [];
+  const amenitiesData = place?.amenities?.[0];
   const schedule = place?.schedules ?? [];
+
+  const activeAmenities: string[] = amenitiesData
+    ? Object.entries(amenitiesData)
+        .filter(([key]) => key.startsWith("has_") || key.startsWith("is_"))
+        .filter(([, value]) => Boolean(value))
+        .map(([key]) => key)
+    : (props.amenities ?? []);
+
+  console.log("Found active amenities: ", activeAmenities);
 
   const fullAddress = Object.entries(address ?? {})
     .filter(([key]) => !["place_id", "updated_at", "created_at"].includes(key))
@@ -174,17 +164,7 @@ export default function PlaceCard(props: PlaceCardProps) {
                 </div>
               )}
             </div>
-            <div className="flex flex-wrap gap-2 w-full mt-2">
-              {props.amenities.map((amenity, index) => {
-                const AmenityIcon = amenityIcons[amenity];
-
-                return (
-                  <Badge key={index}>
-                    <AmenityIcon /> {amenity}
-                  </Badge>
-                );
-              })}
-            </div>
+            <PlaceAmenities amenities={activeAmenities} />
           </div>
         </CardContent>
       </div>
