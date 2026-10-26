@@ -3,6 +3,7 @@ import * as placeController from "../controllers/placeController.js";
 import { validate } from "../middlewares/validationMiddleware.js";
 import {
   GetAllPlacesSchema,
+  GetPlaceSchema,
   UpdatePlaceSchema,
   CreatePlaceSchema,
   DeletePlaceSchema,
@@ -26,6 +27,7 @@ const upload = multer({
 const router = express.Router();
 
 router.get("/", validate(GetAllPlacesSchema), placeController.getAllPlaces);
+router.get("/:id", validate(GetPlaceSchema), placeController.getPlace);
 
 router.patch(
   "/:id",
