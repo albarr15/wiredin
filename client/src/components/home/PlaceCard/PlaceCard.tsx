@@ -22,7 +22,6 @@ import {
   PhilippinePesoIcon,
   PlugIcon,
   SquareParkingIcon,
-  StarIcon,
   ToiletIcon,
   WifiIcon,
   type LucideIcon,
@@ -30,9 +29,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Toggle } from "@/components/ui/toggle";
 
-import { type Address, type Place } from "@wiredin/types";
+import {
+  type Address,
+  type Amenity,
+  type Place,
+  type ScheduleDay,
+} from "@wiredin/types";
 import { useEffect, useState } from "react";
 import { PlaceRating } from "./PlaceRating";
+import { useAuth } from "@/context/AuthContext";
 
 type NonPlaceProps = {
   rating: number;
@@ -72,35 +77,36 @@ export default function PlaceCard(props: PlaceCardProps) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [address, setAddress] = useState<Address | null>(null);
-  const fullAddress = Object.entries(address ?? {})
-    .filter(([key]) => !["place_id", "updated_at", "created_at"].includes(key))
-    .map(([, value]) => value)
-    .join(", ");
+  const [place, setPlace] = useState<Place | null>(null);
+
+  const { session } = useAuth();
 
   useEffect(() => {
-    const getAddress = async () => {
-      console.log("getting addres for place ", props.id);
+    const getPlace = async (id: string) => {
       setError(null);
       setIsLoading(true);
 
       try {
-        const response = await fetch(`/api/places/${props.id}/addresses`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `/api/places/${id}?include=addresses,amenities,schedules`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.access_token}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
-          throw new Error("Error occurred when fetching address.");
+          throw new Error("Error occurred when fetching place.");
         }
 
         const data = await response.json();
         console.log("Success:", data);
 
         setSuccess(true);
-        setAddress(data.data);
+        setPlace(data.data[0]);
       } catch (error: unknown) {
         setError(error instanceof Error ? error.message : "An error occurred");
       } finally {
@@ -108,8 +114,16 @@ export default function PlaceCard(props: PlaceCardProps) {
       }
     };
 
-    getAddress();
+    getPlace(props.id);
   }, []);
+  const address = place?.addresses?.[0];
+  const amenities = place?.amenities ?? [];
+  const schedule = place?.schedules ?? [];
+
+  const fullAddress = Object.entries(address ?? {})
+    .filter(([key]) => !["place_id", "updated_at", "created_at"].includes(key))
+    .map(([, value]) => value)
+    .join(", ");
 
   return (
     <Card className={"flex flex-row! @container max-h-56"}>
@@ -121,7 +135,7 @@ export default function PlaceCard(props: PlaceCardProps) {
         <CardHeader>
           <div className="flex flex-row gap-2">
             <CardTitle>{props.name}</CardTitle>
-            { }
+            {}
             <PlaceIcon strokeWidth={1.5} size={18} strokeOpacity={0.8} />
           </div>
           <CardDescription>
