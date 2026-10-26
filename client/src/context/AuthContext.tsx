@@ -59,7 +59,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
       } else if (event === "SIGNED_OUT") {
-        console.log("SIGNED_OUT", session);
         setSession(null);
       } else if (event === "PASSWORD_RECOVERY") {
         // handle password recovery event

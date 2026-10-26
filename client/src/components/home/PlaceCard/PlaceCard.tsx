@@ -84,7 +84,6 @@ export default function PlaceCard(props: PlaceCardProps) {
         }
 
         const data = await response.json();
-        console.log("Success:", data);
 
         setSuccess(true);
         setPlace(data.data[0]);
@@ -107,8 +106,6 @@ export default function PlaceCard(props: PlaceCardProps) {
         .filter(([, value]) => Boolean(value))
         .map(([key]) => key)
     : (props.amenities ?? []);
-
-  console.log("Found active amenities: ", activeAmenities);
 
   const fullAddress = Object.entries(address ?? {})
     .filter(([key]) => !["place_id", "updated_at", "created_at"].includes(key))

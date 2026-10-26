@@ -48,7 +48,6 @@ export default function OnboardUserDialog() {
       }
 
       const data = await response.json();
-      console.log("Success:", data);
       alert("Username updated successfully!");
 
       setUsername("");
