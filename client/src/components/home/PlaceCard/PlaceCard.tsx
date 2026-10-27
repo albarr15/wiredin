@@ -32,9 +32,6 @@ import { PlaceRating } from "./PlaceRating";
 import { useAuth } from "@/context/AuthContext";
 
 type NonPlaceProps = {
-  rating: number;
-  reviews_amount: number | null;
-  // location: string;
   schedule: string | null;
   amenities: string[];
 };
@@ -44,6 +41,11 @@ type PlaceCardProps = Pick<
   "id" | "name" | "category" | "pricing_tier" | "image_url"
 > &
   NonPlaceProps;
+
+export type PlaceRatingData = {
+  rating: number;
+  reviewCount: number;
+};
 
 export default function PlaceCard(props: PlaceCardProps) {
   const placeIcons: Record<string, LucideIcon> = {
@@ -59,6 +61,8 @@ export default function PlaceCard(props: PlaceCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [place, setPlace] = useState<Place | null>(null);
+  const [placeRatingData, setPlaceRatingData] =
+    useState<PlaceRatingData | null>(null);
 
   const { session } = useAuth();
 
@@ -94,8 +98,53 @@ export default function PlaceCard(props: PlaceCardProps) {
       }
     };
 
+    const getPlaceRating = async (id: string) => {
+      setError(null);
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(`/api/places/${id}/reviews/summary`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error occurred when fetching place rating.");
+        }
+
+        const data = await response.json();
+        const ratingData = data.data?.[0];
+
+        if (!ratingData) {
+          throw new Error("Place rating response was empty.");
+        }
+
+        const rating =
+          ratingData.rating_avg === null
+            ? 0
+            : Number(ratingData.rating_avg);
+        const reviewCount = Number(ratingData.review_count);
+
+        if (!Number.isFinite(rating) || !Number.isFinite(reviewCount)) {
+          throw new Error("Place rating response had invalid values.");
+        }
+
+        setSuccess(true);
+        setPlaceRatingData({ rating, reviewCount });
+      } catch (error: unknown) {
+        setError(error instanceof Error ? error.message : "An error occurred");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     getPlace(props.id);
+    getPlaceRating(props.id);
   }, []);
+
   const address = place?.addresses?.[0];
   const amenitiesData = place?.amenities?.[0];
   const schedule = place?.schedules ?? [];
@@ -126,7 +175,7 @@ export default function PlaceCard(props: PlaceCardProps) {
             <PlaceIcon strokeWidth={1.5} size={18} strokeOpacity={0.8} />
           </div>
           <CardDescription>
-            {props.rating && <PlaceRating rating={props.rating} />}
+            {placeRatingData && <PlaceRating {...placeRatingData} />}
           </CardDescription>
           <CardAction>
             <Toggle variant="outline" aria-label="Toggle save">
