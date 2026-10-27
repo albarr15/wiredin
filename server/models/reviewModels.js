@@ -104,4 +104,17 @@ export const Review = {
 
     return result.rows[0];
   },
+
+  getPlaceRating: async (place_id) => {
+    const result = await pool.query(
+      `
+      SELECT COUNT(id) AS review_count, ROUND(AVG(rating), 1) AS rating_avg
+      FROM reviews
+      WHERE place_id = $1;
+    `,
+      [place_id],
+    );
+
+    return result.rows;
+  },
 };

@@ -5,4 +5,5 @@ export {
   DeleteReviewSchema,
   GetReviewByIdSchema,
   GetReviewsByPlaceIdSchema,
+  GetPlaceRatingSchema,
 } from "@wiredin/types";

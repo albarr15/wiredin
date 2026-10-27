@@ -4,6 +4,7 @@ import { validate } from "../middlewares/validationMiddleware.js";
 import {
   CreateReviewSchema,
   DeleteReviewSchema,
+  GetPlaceRatingSchema,
   GetReviewByIdSchema,
   GetReviewsByPlaceIdSchema,
   UpdateReviewSchema,
@@ -21,10 +22,10 @@ router.get(
 );
 
 router.get(
-  "/:id",
-  validate(GetReviewByIdSchema),
+  "/summary",
+  validate(GetPlaceRatingSchema),
   validatePlace,
-  reviewController.getReviewById,
+  reviewController.getPlaceRating,
 );
 
 router.get(
@@ -32,6 +33,13 @@ router.get(
   validate(GetReviewsByPlaceIdSchema),
   validatePlace,
   reviewController.getReviewsByPlaceId,
+);
+
+router.get(
+  "/:id",
+  validate(GetReviewByIdSchema),
+  validatePlace,
+  reviewController.getReviewById,
 );
 
 router.post(
@@ -57,5 +65,4 @@ router.delete(
   authenticateUser,
   reviewController.deleteReview,
 );
-
 export default router;
