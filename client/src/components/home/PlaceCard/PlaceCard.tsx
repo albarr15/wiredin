@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 
 import {
-  ClockIcon,
   CoffeeIcon,
   HeartIcon,
   MapPinIcon,
@@ -21,26 +20,16 @@ import {
 import { Toggle } from "@/components/ui/toggle";
 import { PlaceAmenities } from "./PlaceAmenities";
 
-import {
-  type Address,
-  type Amenity,
-  type Place,
-  type ScheduleDay,
-} from "@wiredin/types";
+import { type Place } from "@wiredin/types";
 import { useEffect, useState } from "react";
 import { PlaceRating } from "./PlaceRating";
 import { useAuth } from "@/context/AuthContext";
-
-type NonPlaceProps = {
-  schedule: string | null;
-  amenities: string[];
-};
+import { PlaceSchedule } from "./PlaceSchedule";
 
 type PlaceCardProps = Pick<
   Place,
   "id" | "name" | "category" | "pricing_tier" | "image_url"
-> &
-  NonPlaceProps;
+>;
 
 export type PlaceRatingData = {
   rating: number;
@@ -123,9 +112,7 @@ export default function PlaceCard(props: PlaceCardProps) {
         }
 
         const rating =
-          ratingData.rating_avg === null
-            ? 0
-            : Number(ratingData.rating_avg);
+          ratingData.rating_avg === null ? 0 : Number(ratingData.rating_avg);
         const reviewCount = Number(ratingData.review_count);
 
         if (!Number.isFinite(rating) || !Number.isFinite(reviewCount)) {
@@ -154,7 +141,7 @@ export default function PlaceCard(props: PlaceCardProps) {
         .filter(([key]) => key.startsWith("has_") || key.startsWith("is_"))
         .filter(([, value]) => Boolean(value))
         .map(([key]) => key)
-    : (props.amenities ?? []);
+    : [];
 
   const fullAddress = Object.entries(address ?? {})
     .filter(([key]) => !["place_id", "updated_at", "created_at"].includes(key))
@@ -193,12 +180,7 @@ export default function PlaceCard(props: PlaceCardProps) {
             </div>
 
             <div className="flex flex-row gap-8 w-full ">
-              {props.schedule && (
-                <div className="flex gap-1 items-center">
-                  <ClockIcon strokeWidth={1.5} size={16} strokeOpacity={1} />
-                  {props.schedule}
-                </div>
-              )}
+              {schedule.length > 0 && <PlaceSchedule schedule={schedule} />}
               {props.pricing_tier && (
                 <div className="flex gap-1 items-center">
                   <PhilippinePesoIcon

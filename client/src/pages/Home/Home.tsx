@@ -105,19 +105,6 @@ export default function Home() {
                 category: place.category,
                 pricing_tier: place.pricing_tier,
                 image_url: place.image_url ?? SampleImg,
-
-                rating: 4.3,
-                reviews_amount: null,
-                // need to fetch and process reviews data here
-
-                // location: "location here, need to fetch in Address api",
-                // // need to fetch and process address data here
-
-                schedule: "9:00 AM - 5:00 PM",
-                // need to fetch and process schedules data here
-
-                amenities: ["has_wifi", "has_outlets"],
-                // need to fetch and process amenities data into a string array here
               };
               return (
                 <Link to="/places/1" key={index}>
