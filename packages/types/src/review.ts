@@ -48,6 +48,10 @@ export const GetReviewsByPlaceIdSchema = z.object({
   params: z.object({ place_id: z.uuid() }),
 });
 
+export const GetPlaceRatingSchema = z.object({
+  params: PlaceIdParamSchema,
+});
+
 export type Review = z.infer<typeof ReviewSchema>;
 export type CreateReviewInput = z.infer<typeof CreateReviewSchema>["body"];
 export type UpdateReviewInput = z.infer<typeof UpdateReviewSchema>["body"];

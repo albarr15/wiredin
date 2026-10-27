@@ -148,3 +148,25 @@ export const deleteReview = async (req, res) => {
     });
   }
 };
+
+export const getPlaceRating = async (req, res) => {
+  const { place_id } = req.params;
+
+  try {
+    const rating = await Review.getPlaceRating(place_id);
+
+    if (!rating) {
+      return res.status(404).json({ error: "Place rating not found." });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully fetched place rating.",
+      data: rating,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
