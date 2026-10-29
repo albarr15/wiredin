@@ -17,7 +17,6 @@ import {
   BriefcaseIcon,
   type LucideIcon,
 } from "lucide-react";
-import { Toggle } from "@/components/ui/toggle";
 import { PlaceAmenities } from "./PlaceAmenities";
 
 import { type Place } from "@wiredin/types";
@@ -25,6 +24,7 @@ import { useEffect, useState } from "react";
 import { PlaceRating } from "./PlaceRating";
 import { useAuth } from "@/context/AuthContext";
 import { PlaceSchedule } from "./PlaceSchedule";
+import { Button } from "@/components/ui/button";
 
 type PlaceCardProps = Pick<
   Place,
@@ -149,44 +149,63 @@ export default function PlaceCard(props: PlaceCardProps) {
     .join(", ");
 
   return (
-    <Card className={"flex flex-row! @container max-h-56"}>
-      <img
-        src={props.image_url}
-        className="object-cover w-1/3 border rounded m-2 shadow-sm"
-      ></img>
-      <div className="flex flex-col w-full h-full gap-(--card-spacing) pt-(--card-spacing)!">
-        <CardHeader>
-          <div className="flex flex-row gap-2">
-            <CardTitle>{props.name}</CardTitle>
-            {}
-            <PlaceIcon strokeWidth={1.5} size={18} strokeOpacity={0.8} />
+    <Card className={"flex flex-row! @container h-36 w-full sm:h-48 p-0"}>
+      <div className="w-1/3 h-full overflow-hidden">
+        <img
+          src={props.image_url}
+          className="object-cover object-center w-full h-full transition-transform duration-300 ease-in-out group-hover/card:scale-105"
+        ></img>
+      </div>
+      <div className="flex flex-col w-2/3 h-full gap-(--card-spacing) p-2 relative *:px-0 *:text-xs *:sm:text-sm">
+        <CardHeader className="gap-0 max-w-3/4">
+          <div className="flex flex-row gap-2 items-center">
+            <PlaceIcon
+              strokeWidth={1.5}
+              size={18}
+              strokeOpacity={0.8}
+              className="shrink-0"
+            />
+            <CardTitle className="sm:text-2xl font-medium line-clamp-2">
+              {props.name}
+            </CardTitle>
           </div>
           <CardDescription>
             {placeRatingData && <PlaceRating {...placeRatingData} />}
           </CardDescription>
-          <CardAction>
-            <Toggle variant="outline" aria-label="Toggle save">
-              <HeartIcon />
-              Save
-            </Toggle>
-          </CardAction>
         </CardHeader>
+        <CardAction className="absolute inset-2">
+          <Button
+            variant="outline"
+            className="rounded-full sm:rounded"
+            aria-label="Save Place"
+          >
+            <HeartIcon />
+            <span className="hidden sm:block">Save</span>
+          </Button>
+        </CardAction>
         <CardContent>
-          <div className="flex flex-col gap-1">
-            <div className="flex gap-1 items-start">
-              <MapPinIcon strokeWidth={1.5} size={18} strokeOpacity={1} />
-              {address && fullAddress}
-              {!address && "..."}
+          <div className="flex flex-col gap-1 ">
+            <div className="flex gap-1 items-start w-full">
+              <MapPinIcon
+                strokeWidth={1.5}
+                size={18}
+                strokeOpacity={1}
+                className="shrink-0"
+              />
+              <span className="line-clamp-1">
+                {!address ? "..." : fullAddress}
+              </span>
             </div>
 
             <div className="flex flex-row gap-8 w-full ">
-              {schedule.length > 0 && <PlaceSchedule schedule={schedule} />}
+              {<PlaceSchedule schedule={schedule} />}
               {props.pricing_tier && (
                 <div className="flex gap-1 items-center">
                   <PhilippinePesoIcon
                     strokeWidth={1.5}
                     size={16}
                     strokeOpacity={1}
+                    className="shrink-0"
                   />
                   {props.pricing_tier}
                 </div>

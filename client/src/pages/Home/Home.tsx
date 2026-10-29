@@ -63,10 +63,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex min-h-full w-full *:p-6">
+    <div className="flex min-h-full w-full *:py-6 *:px-2 *:sm:px-6">
       <main className="flex flex-col gap-2 flex-1">
-        <DashboardSearchBar />
-        <div className="flex gap-2">
+        {/* <DashboardSearchBar /> */}
+        {/* <div className="flex gap-2">
           <PlaceTypeSelect />
           <AmenitiesSelect />
           <Toggle
@@ -87,7 +87,7 @@ export default function Home() {
             <PlugIcon />
             With Outlets
           </Toggle>
-        </div>
+        </div> */}
 
         <div className="flex flex-col mt-8 gap-4">
           {isLoading && (
@@ -114,7 +114,7 @@ export default function Home() {
             })}
         </div>
       </main>
-      <aside className="bg-secondary flex-1 lg:w-1/2 md:w-1/3 hidden md:flex lg:shrink-0 lg:sticky lg:self-start lg:h-[calc(100vh-80px)] lg:top-17.25 items-center">
+      <aside className="bg-secondary lg:w-1/2 md:w-1/3 hidden md:flex lg:shrink-0 lg:sticky lg:self-start lg:h-[calc(100vh-80px)] lg:top-17.25 items-center">
         abc
       </aside>
       <AlertDialog open={open} onOpenChange={setOpen}>

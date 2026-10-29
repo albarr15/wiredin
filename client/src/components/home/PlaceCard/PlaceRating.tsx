@@ -13,8 +13,8 @@ export function PlaceRating({ reviewCount, rating }: PlaceRatingData) {
   const roundedRating = Math.round(rating);
 
   return (
-    <div className="flex gap-2 items-center text-sm font-medium">
-      <span>{rating.toFixed(1)}</span>
+    <div className="flex gap-2 items-center! text-sm font-medium">
+      <span className="text-sm font-normal">{rating.toFixed(1)}</span>
       <div
         className="flex gap-0.5"
         aria-label={`Rated ${rating.toFixed(1)} out of 5 stars`}
@@ -31,6 +31,12 @@ export function PlaceRating({ reviewCount, rating }: PlaceRatingData) {
           />
         ))}
       </div>
+      <span className="text-sm hidden sm:block font-normal">
+        ({reviewCount} reviews)
+      </span>
+      <span className="text-sm block sm:hidden font-normal">
+        ({reviewCount})
+      </span>
     </div>
   );
 }
