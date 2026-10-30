@@ -1,9 +1,4 @@
 import { useEffect, useState } from "react";
-import { DashboardSearchBar } from "@/components/home/DashboardSearchBar";
-import PlaceTypeSelect from "./PlaceTypeSelect";
-import AmenitiesSelect from "./AmenitiesSelect";
-import { Toggle } from "@/components/ui/toggle";
-import { PlugIcon, WifiIcon } from "lucide-react";
 import PlaceCard from "@/components/home/PlaceCard/PlaceCard";
 import { Link } from "react-router";
 import {
@@ -20,6 +15,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Spinner } from "@/components/ui/spinner";
 import SampleImg from "@/assets/hero.png";
 import { type Place } from "@wiredin/types";
+import DashboardFilter from "@/components/home/DashboardFilter";
+import { DashboardSearchBar } from "@/components/home/dashboard/DashboardSearchBar";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -65,29 +62,8 @@ export default function Home() {
   return (
     <div className="flex min-h-full w-full *:py-6 *:px-2 *:sm:px-6">
       <main className="flex flex-col gap-2 flex-1">
-        {/* <DashboardSearchBar /> */}
-        {/* <div className="flex gap-2">
-          <PlaceTypeSelect />
-          <AmenitiesSelect />
-          <Toggle
-            aria-label="Toggle wifi"
-            size="sm"
-            variant="outline"
-            className="focus:bg-primary focus:text-foreground h-full"
-          >
-            <WifiIcon />
-            With Wifi
-          </Toggle>
-          <Toggle
-            aria-label="Toggle outlets"
-            size="sm"
-            variant="outline"
-            className="focus:bg-primary focus:text-foreground h-full"
-          >
-            <PlugIcon />
-            With Outlets
-          </Toggle>
-        </div> */}
+        <DashboardSearchBar />
+        {/* <DashboardFilter /> */}
 
         <div className="flex flex-col mt-8 gap-4">
           {isLoading && (
