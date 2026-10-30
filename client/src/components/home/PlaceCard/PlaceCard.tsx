@@ -149,7 +149,7 @@ export default function PlaceCard(props: PlaceCardProps) {
     .join(", ");
 
   return (
-    <Card className={"flex flex-row! @container h-36 w-full sm:h-48 p-0"}>
+    <Card className={"flex flex-row! @container h-42 w-full sm:h-48 p-0"}>
       <div className="w-1/3 h-full overflow-hidden">
         <img
           src={props.image_url}
@@ -157,15 +157,15 @@ export default function PlaceCard(props: PlaceCardProps) {
         ></img>
       </div>
       <div className="flex flex-col w-2/3 h-full gap-(--card-spacing) p-2 relative *:px-0 *:text-xs *:sm:text-sm">
-        <CardHeader className="gap-0 max-w-3/4">
-          <div className="flex flex-row gap-2 items-center">
+        <CardHeader className="gap-0.5 max-w-3/4">
+          <div className="flex flex-row gap-2 items-start">
             <PlaceIcon
               strokeWidth={1.5}
               size={18}
               strokeOpacity={0.8}
-              className="shrink-0"
+              className="shrink-0 sm:mt-1"
             />
-            <CardTitle className="sm:text-2xl font-medium line-clamp-2">
+            <CardTitle className="sm:text-xl font-medium line-clamp-2 leading-tight">
               {props.name}
             </CardTitle>
           </div>
