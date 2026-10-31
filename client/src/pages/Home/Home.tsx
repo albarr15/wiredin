@@ -15,14 +15,17 @@ import { useAuth } from "@/context/AuthContext";
 import { Spinner } from "@/components/ui/spinner";
 import SampleImg from "@/assets/hero.png";
 import { type Place } from "@wiredin/types";
-import DashboardFilter from "@/components/home/DashboardFilter";
 import { DashboardSearchBar } from "@/components/home/dashboard/DashboardSearchBar";
+import DashboardFilter from "@/components/home/dashboard/DashboardFilter";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
 
   const { session } = useAuth();
   const [places, setPlaces] = useState<Place[] | null>(null);
@@ -63,7 +66,7 @@ export default function Home() {
     <div className="flex min-h-full w-full *:py-6 *:px-2 *:sm:px-6">
       <main className="flex flex-col gap-2 flex-1">
         <DashboardSearchBar />
-        {/* <DashboardFilter /> */}
+        <DashboardFilter />
 
         <div className="flex flex-col mt-8 gap-4">
           {isLoading && (

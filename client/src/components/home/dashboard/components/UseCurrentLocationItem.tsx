@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Navigation, Loader2 } from "lucide-react";
 import { cn } from "cn";
 
